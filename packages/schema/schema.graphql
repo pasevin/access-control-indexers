@@ -1,0 +1,113 @@
+# Unified Superset Schema for OpenZeppelin Access Control Indexers
+# All networks output this exact format. Nullable fields handle ecosystem differences.
+# @index annotations enable server-side filtering in GraphQL queries
+
+# =============================================================================
+# ACCESS CONTROL EVENT - Historical event log
+# =============================================================================
+type AccessControlEvent @entity {
+  id: ID! # Unique identifier: txHash-logIndex
+  # Network identification
+  network: String! @index # e.g., "ethereum-mainnet", "stellar-testnet"
+  # Contract information
+  contract: String! @index # Contract address (normalized: lowercase for EVM)
+  # Event metadata
+  eventType: EventType! @index # Type of event
+  blockNumber: BigInt! # Block/ledger number
+  timestamp: Date! @index # Event timestamp
+  txHash: String! # Transaction hash
+  # Role events (ROLE_GRANTED, ROLE_REVOKED)
+  role: String @index # Role identifier (bytes32 hex for EVM, symbol for Stellar)
+  account: String @index # Account receiving/losing the role
+  sender: String # Who initiated the action (grantor/revoker)
+  # Role admin change (ROLE_ADMIN_CHANGED)
+  previousAdminRole: String # Previous admin role
+  newAdminRole: String # New admin role
+  # Ownership events (OWNERSHIP_TRANSFERRED, OWNERSHIP_TRANSFER_STARTED, OWNERSHIP_RENOUNCED)
+  previousOwner: String # Previous owner address
+  newOwner: String # New owner address (null for renounce)
+  # Stellar-specific: Admin events (ADMIN_TRANSFER_INITIATED, ADMIN_TRANSFER_COMPLETED, ADMIN_RENOUNCED)
+  previousAdmin: String # Previous admin address
+  newAdmin: String # New admin address
+  # Stellar-specific: Pending transfer expiration
+  liveUntilLedger: Int # Expiration ledger for pending transfers
+}
+
+# =============================================================================
+# EVENT TYPES - Superset of all events across ecosystems
+# =============================================================================
+enum EventType {
+  # Role events (EVM + Stellar)
+  ROLE_GRANTED # Role granted to account
+  ROLE_REVOKED # Role revoked from account
+  ROLE_ADMIN_CHANGED # Role's admin role changed
+  # Ownership events (EVM + Stellar)
+  OWNERSHIP_TRANSFERRED # Ownership transferred (EVM: OwnershipTransferred, Stellar: ownership_transfer_completed)
+  OWNERSHIP_TRANSFER_STARTED # Two-step transfer started (EVM: Ownable2Step, Stellar: ownership_transfer)
+  OWNERSHIP_RENOUNCED # Ownership renounced (EVM: to 0x0, Stellar: ownership_renounced)
+  # Admin events (Stellar only)
+  ADMIN_TRANSFER_INITIATED # Admin transfer initiated with expiration
+  ADMIN_TRANSFER_COMPLETED # Admin transfer accepted/completed
+  ADMIN_RENOUNCED # Admin role renounced
+}
+
+# =============================================================================
+# ROLE MEMBERSHIP - Current state of role assignments
+# =============================================================================
+type RoleMembership @entity {
+  id: ID! # Format: network-contract-role-account
+  # Identifiers
+  network: String! @index # Network identifier
+  contract: String! @index # Contract address
+  role: String! @index # Role identifier
+  account: String! @index # Account with the role
+  # Metadata
+  grantedAt: Date! # When the role was granted
+  grantedBy: String # Who granted the role
+  txHash: String! # Transaction that granted the role
+}
+
+# =============================================================================
+# CONTRACT OWNERSHIP - Current ownership state
+# =============================================================================
+type ContractOwnership @entity {
+  id: ID! # Format: network-contract
+  # Identifiers
+  network: String! @index # Network identifier
+  contract: String! @index # Contract address
+  # Current state
+  owner: String! @index # Current owner address
+  previousOwner: String # Previous owner address
+  # Pending transfer (for two-step ownership)
+  pendingOwner: String # Pending owner (awaiting acceptance)
+  pendingUntilLedger: Int # Expiration for pending transfer (Stellar)
+  # Metadata
+  transferredAt: Date! # When ownership was last transferred
+  txHash: String! # Transaction of last transfer
+}
+
+# =============================================================================
+# CONTRACT - Contract metadata
+# =============================================================================
+type Contract @entity {
+  id: ID! # Format: network-contract
+  # Identifiers
+  network: String! @index # Network identifier
+  address: String! @index # Contract address
+  # Classification
+  type: ContractType! @index # Type of access control implemented
+  # Timestamps
+  firstSeenAt: Date! # First event from this contract
+  lastActivityAt: Date! # Last event from this contract
+  # Deployment info (if available)
+  deployTxHash: String # Deployment transaction hash
+}
+
+# =============================================================================
+# CONTRACT TYPES
+# =============================================================================
+enum ContractType {
+  ACCESS_CONTROL # Only AccessControl events
+  OWNABLE # Only Ownable events
+  ACCESS_CONTROL_OWNABLE # Both AccessControl and Ownable events
+}

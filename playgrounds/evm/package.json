@@ -1,0 +1,17 @@
+{
+  "name": "@oz-indexers/playground-evm",
+  "version": "1.0.0",
+  "description": "EVM playground contracts for testing Access Control indexers",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.ts",
+    "generate-events": "hardhat run scripts/generate-events.ts",
+    "test": "hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.0",
+    "typescript": "^5.0.0"
+  }
+}

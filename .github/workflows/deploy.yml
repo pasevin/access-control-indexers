@@ -1,0 +1,67 @@
+name: Deploy Indexer
+
+on:
+  workflow_dispatch:
+    inputs:
+      network:
+        description: "Network to deploy (e.g., ethereum-mainnet, stellar-testnet)"
+        required: true
+        type: string
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm --filter './packages/**' build
+
+      - name: Determine network type
+        id: network-type
+        run: |
+          if [[ "${{ inputs.network }}" == stellar-* ]]; then
+            echo "type=stellar" >> $GITHUB_OUTPUT
+            echo "path=networks/stellar/${${{ inputs.network }}#stellar-}" >> $GITHUB_OUTPUT
+          else
+            echo "type=evm" >> $GITHUB_OUTPUT
+            echo "path=networks/evm/${{ inputs.network }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build indexer
+        run: pnpm --filter "@oz-indexers/${{ inputs.network }}" build
+
+      - name: Publish to SubQuery
+        run: |
+          cd ${{ steps.network-type.outputs.path }}
+          npx subql publish
+        env:
+          SUBQL_ACCESS_TOKEN: ${{ secrets.SUBQL_ACCESS_TOKEN }}
+
+      - name: Record deployment
+        run: |
+          echo "Deployed ${{ inputs.network }} to ${{ inputs.environment }}"
+          echo "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"

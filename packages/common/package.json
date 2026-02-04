@@ -1,0 +1,27 @@
+{
+  "name": "@oz-indexers/common",
+  "version": "1.0.0",
+  "description": "Shared utilities for OpenZeppelin Access Control indexers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenZeppelin/access-control-indexers.git",
+    "directory": "packages/common"
+  },
+  "author": "OpenZeppelin",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "@oz-indexers/base-sepolia",
+  "version": "1.0.0",
+  "description": "OpenZeppelin Access Control indexer for Base Sepolia",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "subql build",
+    "codegen": "subql codegen",
+    "start:docker": "docker compose pull && docker compose up --remove-orphans",
+    "dev": "subql codegen && subql build",
+    "test": "vitest run",
+    "clean": "rm -rf dist .data"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenZeppelin/access-control-indexers.git",
+    "directory": "networks/evm/base-sepolia"
+  },
+  "author": "OpenZeppelin",
+  "license": "MIT",
+  "dependencies": {
+    "@oz-indexers/common": "workspace:*",
+    "@oz-indexers/evm-handlers": "workspace:*",
+    "@subql/common": "latest",
+    "@subql/common-ethereum": "latest",
+    "@subql/types-core": "latest",
+    "tslib": "^2.6.0",
+    "@subql/types-ethereum": "latest"
+  },
+  "devDependencies": {
+    "@subql/cli": "latest",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
+}

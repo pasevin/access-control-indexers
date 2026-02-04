@@ -1,0 +1,24 @@
+{
+  "name": "@oz-indexers/network-config",
+  "version": "1.0.0",
+  "description": "Network configurations for OpenZeppelin Access Control indexers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenZeppelin/access-control-indexers.git",
+    "directory": "packages/network-config"
+  },
+  "author": "OpenZeppelin",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

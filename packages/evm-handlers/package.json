@@ -1,0 +1,35 @@
+{
+  "name": "@oz-indexers/evm-handlers",
+  "version": "1.0.0",
+  "description": "Shared EVM mapping handlers for OpenZeppelin Access Control indexers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "abis"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenZeppelin/access-control-indexers.git",
+    "directory": "packages/evm-handlers"
+  },
+  "author": "OpenZeppelin",
+  "license": "MIT",
+  "dependencies": {
+    "@oz-indexers/common": "workspace:*"
+  },
+  "peerDependencies": {
+    "@subql/types-ethereum": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@subql/types-ethereum": "latest",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
+}
