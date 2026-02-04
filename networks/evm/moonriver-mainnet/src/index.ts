@@ -1,14 +1,41 @@
 /**
- * Moonriver Access Control Indexer
+ * Moonriver Mainnet Access Control Indexer
  * Network ID: moonriver-mainnet
- * Chain ID: 1285
  */
 
-// Re-export all handlers
+import {
+  initializeHandlers,
+  handleRoleGranted,
+  handleRoleRevoked,
+  handleRoleAdminChanged,
+  handleOwnershipTransferred,
+  handleOwnershipTransferStarted,
+} from '@oz-indexers/evm-handlers';
+
+import {
+  AccessControlEvent,
+  RoleMembership,
+  ContractOwnership,
+  Contract,
+} from './types';
+
+// Initialize shared handlers with network-specific configuration
+initializeHandlers({
+  networkId: 'moonriver-mainnet',
+  entities: {
+    AccessControlEvent,
+    RoleMembership,
+    ContractOwnership,
+    Contract,
+  },
+  store,
+});
+
+// Re-export handlers for SubQuery to discover
 export {
   handleRoleGranted,
   handleRoleRevoked,
   handleRoleAdminChanged,
   handleOwnershipTransferred,
   handleOwnershipTransferStarted,
-} from './handlers';
+};

@@ -1,14 +1,41 @@
 /**
- * Polygon zkEVM Access Control Indexer
+ * Polygon Zkevm Mainnet Access Control Indexer
  * Network ID: polygon-zkevm-mainnet
- * Chain ID: 1101
  */
 
-// Re-export all handlers
+import {
+  initializeHandlers,
+  handleRoleGranted,
+  handleRoleRevoked,
+  handleRoleAdminChanged,
+  handleOwnershipTransferred,
+  handleOwnershipTransferStarted,
+} from '@oz-indexers/evm-handlers';
+
+import {
+  AccessControlEvent,
+  RoleMembership,
+  ContractOwnership,
+  Contract,
+} from './types';
+
+// Initialize shared handlers with network-specific configuration
+initializeHandlers({
+  networkId: 'polygon-zkevm-mainnet',
+  entities: {
+    AccessControlEvent,
+    RoleMembership,
+    ContractOwnership,
+    Contract,
+  },
+  store,
+});
+
+// Re-export handlers for SubQuery to discover
 export {
   handleRoleGranted,
   handleRoleRevoked,
   handleRoleAdminChanged,
   handleOwnershipTransferred,
   handleOwnershipTransferStarted,
-} from './handlers';
+};

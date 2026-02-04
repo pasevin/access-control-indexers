@@ -1,14 +1,41 @@
 /**
- * Polygon zkEVM Cardona Access Control Indexer
+ * Polygon Zkevm Cardona Access Control Indexer
  * Network ID: polygon-zkevm-cardona
- * Chain ID: 2442
  */
 
-// Re-export all handlers
+import {
+  initializeHandlers,
+  handleRoleGranted,
+  handleRoleRevoked,
+  handleRoleAdminChanged,
+  handleOwnershipTransferred,
+  handleOwnershipTransferStarted,
+} from '@oz-indexers/evm-handlers';
+
+import {
+  AccessControlEvent,
+  RoleMembership,
+  ContractOwnership,
+  Contract,
+} from './types';
+
+// Initialize shared handlers with network-specific configuration
+initializeHandlers({
+  networkId: 'polygon-zkevm-cardona',
+  entities: {
+    AccessControlEvent,
+    RoleMembership,
+    ContractOwnership,
+    Contract,
+  },
+  store,
+});
+
+// Re-export handlers for SubQuery to discover
 export {
   handleRoleGranted,
   handleRoleRevoked,
   handleRoleAdminChanged,
   handleOwnershipTransferred,
   handleOwnershipTransferStarted,
-} from './handlers';
+};

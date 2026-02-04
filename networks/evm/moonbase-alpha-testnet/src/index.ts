@@ -1,14 +1,41 @@
 /**
- * Moonbase Alpha Access Control Indexer
+ * Moonbase Alpha Testnet Access Control Indexer
  * Network ID: moonbase-alpha-testnet
- * Chain ID: 1287
  */
 
-// Re-export all handlers
+import {
+  initializeHandlers,
+  handleRoleGranted,
+  handleRoleRevoked,
+  handleRoleAdminChanged,
+  handleOwnershipTransferred,
+  handleOwnershipTransferStarted,
+} from '@oz-indexers/evm-handlers';
+
+import {
+  AccessControlEvent,
+  RoleMembership,
+  ContractOwnership,
+  Contract,
+} from './types';
+
+// Initialize shared handlers with network-specific configuration
+initializeHandlers({
+  networkId: 'moonbase-alpha-testnet',
+  entities: {
+    AccessControlEvent,
+    RoleMembership,
+    ContractOwnership,
+    Contract,
+  },
+  store,
+});
+
+// Re-export handlers for SubQuery to discover
 export {
   handleRoleGranted,
   handleRoleRevoked,
   handleRoleAdminChanged,
   handleOwnershipTransferred,
   handleOwnershipTransferStarted,
-} from './handlers';
+};

@@ -1,14 +1,41 @@
 /**
  * Base Sepolia Access Control Indexer
  * Network ID: base-sepolia
- * Chain ID: 84532
  */
 
-// Re-export all handlers
+import {
+  initializeHandlers,
+  handleRoleGranted,
+  handleRoleRevoked,
+  handleRoleAdminChanged,
+  handleOwnershipTransferred,
+  handleOwnershipTransferStarted,
+} from '@oz-indexers/evm-handlers';
+
+import {
+  AccessControlEvent,
+  RoleMembership,
+  ContractOwnership,
+  Contract,
+} from './types';
+
+// Initialize shared handlers with network-specific configuration
+initializeHandlers({
+  networkId: 'base-sepolia',
+  entities: {
+    AccessControlEvent,
+    RoleMembership,
+    ContractOwnership,
+    Contract,
+  },
+  store,
+});
+
+// Re-export handlers for SubQuery to discover
 export {
   handleRoleGranted,
   handleRoleRevoked,
   handleRoleAdminChanged,
   handleOwnershipTransferred,
   handleOwnershipTransferStarted,
-} from './handlers';
+};
