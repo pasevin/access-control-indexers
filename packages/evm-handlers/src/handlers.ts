@@ -308,7 +308,7 @@ export async function handleOwnershipTransferred(
   // Determine if this is a renounce (transfer to zero address)
   const eventType = isOwnershipRenounce(newOwner)
     ? EventType.OWNERSHIP_RENOUNCED
-    : EventType.OWNERSHIP_TRANSFERRED;
+    : EventType.OWNERSHIP_TRANSFER_COMPLETED;
 
   // Create event record
   const event = AccessControlEvent.create({
