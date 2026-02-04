@@ -15,18 +15,23 @@
     "build": "pnpm -r build",
     "build:evm": "pnpm --filter './networks/evm/**' build",
     "build:stellar": "pnpm --filter './networks/stellar/**' build",
+    "build:network": "tsx scripts/build-network.ts",
+    "codegen": "pnpm -r codegen",
+    "codegen:evm": "pnpm --filter './networks/evm/**' codegen",
+    "codegen:stellar": "pnpm --filter './networks/stellar/**' codegen",
     "test": "pnpm -r test",
     "test:evm": "pnpm --filter './networks/evm/**' test",
     "test:stellar": "pnpm --filter './networks/stellar/**' test",
-    "codegen": "pnpm -r codegen",
     "lint": "pnpm -r lint",
     "clean": "pnpm -r clean",
     "generate:network": "tsx scripts/generate-network.ts",
-    "sync:schema": "tsx scripts/sync-schema.ts"
+    "sync:schema": "tsx scripts/sync-schema.ts",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "ethers": "^5.7.0",
+    "husky": "^9.1.7",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0"
   },

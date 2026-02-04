@@ -1,0 +1,2 @@
+# Validate all networks reference the shared schema correctly
+pnpm run sync:schema
