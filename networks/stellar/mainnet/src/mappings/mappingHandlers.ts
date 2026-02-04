@@ -540,7 +540,7 @@ export async function handleOwnershipTransferCompleted(
     id: generateEventId(event.id, 'ownership'),
     network: NETWORK_ID,
     contract: contractAddress,
-    eventType: EventType.OWNERSHIP_TRANSFERRED,
+    eventType: EventType.OWNERSHIP_TRANSFER_COMPLETED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
     txHash: event.transaction?.hash || 'unknown',

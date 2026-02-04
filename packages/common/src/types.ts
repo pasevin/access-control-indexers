@@ -12,7 +12,7 @@ export enum EventType {
   ROLE_ADMIN_CHANGED = 'ROLE_ADMIN_CHANGED',
 
   // Ownership events (EVM + Stellar)
-  OWNERSHIP_TRANSFERRED = 'OWNERSHIP_TRANSFERRED',
+  OWNERSHIP_TRANSFER_COMPLETED = 'OWNERSHIP_TRANSFER_COMPLETED',
   OWNERSHIP_TRANSFER_STARTED = 'OWNERSHIP_TRANSFER_STARTED',
   OWNERSHIP_RENOUNCED = 'OWNERSHIP_RENOUNCED',
 
@@ -78,7 +78,7 @@ export interface RoleAdminChangedEventData extends BaseEventData {
  */
 export interface OwnershipEventData extends BaseEventData {
   eventType:
-    | EventType.OWNERSHIP_TRANSFERRED
+    | EventType.OWNERSHIP_TRANSFER_COMPLETED
     | EventType.OWNERSHIP_TRANSFER_STARTED
     | EventType.OWNERSHIP_RENOUNCED;
   previousOwner: string;

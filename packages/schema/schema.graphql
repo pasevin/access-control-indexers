@@ -23,7 +23,7 @@ type AccessControlEvent @entity {
   # Role admin change (ROLE_ADMIN_CHANGED)
   previousAdminRole: String # Previous admin role
   newAdminRole: String # New admin role
-  # Ownership events (OWNERSHIP_TRANSFERRED, OWNERSHIP_TRANSFER_STARTED, OWNERSHIP_RENOUNCED)
+  # Ownership events (OWNERSHIP_TRANSFER_COMPLETED, OWNERSHIP_TRANSFER_STARTED, OWNERSHIP_RENOUNCED)
   previousOwner: String # Previous owner address
   newOwner: String # New owner address (null for renounce)
   # Stellar-specific: Admin events (ADMIN_TRANSFER_INITIATED, ADMIN_TRANSFER_COMPLETED, ADMIN_RENOUNCED)
@@ -42,7 +42,7 @@ enum EventType {
   ROLE_REVOKED # Role revoked from account
   ROLE_ADMIN_CHANGED # Role's admin role changed
   # Ownership events (EVM + Stellar)
-  OWNERSHIP_TRANSFERRED # Ownership transferred (EVM: OwnershipTransferred, Stellar: ownership_transfer_completed)
+  OWNERSHIP_TRANSFER_COMPLETED # Ownership transferred (EVM: OwnershipTransferred, Stellar: ownership_transfer_completed)
   OWNERSHIP_TRANSFER_STARTED # Two-step transfer started (EVM: Ownable2Step, Stellar: ownership_transfer)
   OWNERSHIP_RENOUNCED # Ownership renounced (EVM: to 0x0, Stellar: ownership_renounced)
   # Admin events (Stellar only)

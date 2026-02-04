@@ -71,7 +71,7 @@ export function determineContractType(
     eventTypes.has(EventType.ROLE_ADMIN_CHANGED);
 
   const hasOwnable =
-    eventTypes.has(EventType.OWNERSHIP_TRANSFERRED) ||
+    eventTypes.has(EventType.OWNERSHIP_TRANSFER_COMPLETED) ||
     eventTypes.has(EventType.OWNERSHIP_TRANSFER_STARTED) ||
     eventTypes.has(EventType.OWNERSHIP_RENOUNCED);
 
@@ -100,7 +100,7 @@ export function isRoleEvent(eventType: EventType): boolean {
  */
 export function isOwnershipEvent(eventType: EventType): boolean {
   return (
-    eventType === EventType.OWNERSHIP_TRANSFERRED ||
+    eventType === EventType.OWNERSHIP_TRANSFER_COMPLETED ||
     eventType === EventType.OWNERSHIP_TRANSFER_STARTED ||
     eventType === EventType.OWNERSHIP_RENOUNCED
   );
