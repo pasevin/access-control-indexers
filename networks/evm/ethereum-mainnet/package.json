@@ -24,8 +24,9 @@
     "@subql/common": "latest",
     "@subql/common-ethereum": "latest",
     "@subql/types-core": "latest",
-    "tslib": "^2.6.0",
-    "@subql/types-ethereum": "latest"
+    "@subql/types-ethereum": "latest",
+    "ethers": "^5.7.0",
+    "tslib": "^2.6.0"
   },
   "devDependencies": {
     "@subql/cli": "latest",

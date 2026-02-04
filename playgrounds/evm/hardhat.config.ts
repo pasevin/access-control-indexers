@@ -1,16 +1,18 @@
-import { HardhatUserConfig } from 'hardhat/config';
-import '@nomicfoundation/hardhat-toolbox';
+import { defineConfig } from 'hardhat/config';
+import hardhatViem from '@nomicfoundation/hardhat-viem';
 
-const config: HardhatUserConfig = {
-  solidity: '0.8.24',
+export default defineConfig({
+  plugins: [hardhatViem],
+  solidity: {
+    version: '0.8.28',
+  },
   networks: {
     // Add network configs as needed
     // Example:
     // sepolia: {
-    //   url: process.env.SEPOLIA_RPC_URL || "",
+    //   type: "http",
+    //   url: process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
     //   accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     // },
   },
-};
-
-export default config;
+});

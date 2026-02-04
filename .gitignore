@@ -10,7 +10,7 @@ build/
 # SubQuery
 .data/
 project.yaml
-src/types/
+**/src/types/
 
 # IDE
 .idea/
@@ -42,3 +42,7 @@ coverage/
 target/
 Cargo.lock
 *.wasm
+
+# Hardhat (playgrounds/evm)
+artifacts/
+cache/

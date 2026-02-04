@@ -1,92 +1,134 @@
-import { ethers } from 'hardhat';
+import { network } from 'hardhat';
+import { keccak256, toBytes } from 'viem';
 
 /**
  * Generate test events for the Access Control indexer
  * Usage: npx hardhat run scripts/generate-events.ts --network <network>
  */
 async function main() {
-  const [deployer, alice, bob, charlie] = await ethers.getSigners();
+  const { viem, networkName } = await network.connect();
+  const publicClient = await viem.getPublicClient();
+  const [deployer, alice, bob, charlie] = await viem.getWalletClients();
 
-  console.log('Generating test events with deployer:', deployer.address);
+  console.log('Generating test events on:', networkName);
+  console.log('Deployer:', deployer.account.address);
   console.log('Test accounts:', {
-    alice: alice.address,
-    bob: bob.address,
-    charlie: charlie.address,
+    alice: alice.account.address,
+    bob: bob.account.address,
+    charlie: charlie.account.address,
   });
 
   // Deploy fresh contracts
   console.log('\n=== Deploying Contracts ===');
 
-  const AccessControlMock = await ethers.getContractFactory(
-    'AccessControlMock'
-  );
-  const accessControl = await AccessControlMock.deploy(deployer.address);
-  await accessControl.waitForDeployment();
-  console.log('AccessControlMock:', await accessControl.getAddress());
+  const accessControl = await viem.deployContract('AccessControlMock', [
+    deployer.account.address,
+  ]);
+  console.log('AccessControlMock:', accessControl.address);
 
-  const Ownable2StepMock = await ethers.getContractFactory('Ownable2StepMock');
-  const ownable2Step = await Ownable2StepMock.deploy(deployer.address);
-  await ownable2Step.waitForDeployment();
-  console.log('Ownable2StepMock:', await ownable2Step.getAddress());
+  const ownable2Step = await viem.deployContract('Ownable2StepMock', [
+    deployer.account.address,
+  ]);
+  console.log('Ownable2StepMock:', ownable2Step.address);
 
-  const CombinedMock = await ethers.getContractFactory('CombinedMock');
-  const combined = await CombinedMock.deploy(deployer.address);
-  await combined.waitForDeployment();
-  console.log('CombinedMock:', await combined.getAddress());
+  const combined = await viem.deployContract('CombinedMock', [
+    deployer.account.address,
+  ]);
+  console.log('CombinedMock:', combined.address);
 
   // Define roles
-  const MINTER_ROLE = ethers.keccak256(ethers.toUtf8Bytes('MINTER_ROLE'));
-  const BURNER_ROLE = ethers.keccak256(ethers.toUtf8Bytes('BURNER_ROLE'));
-  const OPERATOR_ROLE = ethers.keccak256(ethers.toUtf8Bytes('OPERATOR_ROLE'));
-  const PAUSER_ROLE = ethers.keccak256(ethers.toUtf8Bytes('PAUSER_ROLE'));
+  const MINTER_ROLE = keccak256(toBytes('MINTER_ROLE'));
+  const BURNER_ROLE = keccak256(toBytes('BURNER_ROLE'));
+  const OPERATOR_ROLE = keccak256(toBytes('OPERATOR_ROLE'));
+  const PAUSER_ROLE = keccak256(toBytes('PAUSER_ROLE'));
 
   console.log('\n=== Phase 1: Grant Roles ===');
 
   // Grant roles to different accounts
-  await accessControl.grantRolePublic(MINTER_ROLE, alice.address);
+  let tx = await accessControl.write.grantRolePublic([
+    MINTER_ROLE,
+    alice.account.address,
+  ]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Granted MINTER_ROLE to alice');
 
-  await accessControl.grantRolePublic(MINTER_ROLE, bob.address);
+  tx = await accessControl.write.grantRolePublic([
+    MINTER_ROLE,
+    bob.account.address,
+  ]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Granted MINTER_ROLE to bob');
 
-  await accessControl.grantRolePublic(BURNER_ROLE, charlie.address);
+  tx = await accessControl.write.grantRolePublic([
+    BURNER_ROLE,
+    charlie.account.address,
+  ]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Granted BURNER_ROLE to charlie');
 
-  await accessControl.grantRolePublic(OPERATOR_ROLE, alice.address);
+  tx = await accessControl.write.grantRolePublic([
+    OPERATOR_ROLE,
+    alice.account.address,
+  ]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Granted OPERATOR_ROLE to alice');
 
   console.log('\n=== Phase 2: Revoke Roles ===');
 
-  await accessControl.revokeRolePublic(MINTER_ROLE, bob.address);
+  tx = await accessControl.write.revokeRolePublic([
+    MINTER_ROLE,
+    bob.account.address,
+  ]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Revoked MINTER_ROLE from bob');
 
   console.log('\n=== Phase 3: Role Admin Changes ===');
 
-  // Set OPERATOR_ROLE as admin of PAUSER_ROLE
-  await accessControl.setRoleAdminPublic(PAUSER_ROLE, OPERATOR_ROLE);
+  tx = await accessControl.write.setRoleAdminPublic([
+    PAUSER_ROLE,
+    OPERATOR_ROLE,
+  ]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Set OPERATOR_ROLE as admin of PAUSER_ROLE');
 
   console.log('\n=== Phase 4: Ownership Transfer (2-Step) ===');
 
   // Start ownership transfer
-  await ownable2Step.transferOwnershipPublic(alice.address);
+  tx = await ownable2Step.write.transferOwnershipPublic([
+    alice.account.address,
+  ]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Started ownership transfer to alice');
 
   // Accept ownership (as alice)
-  await ownable2Step.connect(alice).acceptOwnershipPublic();
+  const ownable2StepAsAlice = await viem.getContractAt(
+    'Ownable2StepMock',
+    ownable2Step.address,
+    { client: { wallet: alice } }
+  );
+  tx = await ownable2StepAsAlice.write.acceptOwnershipPublic();
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Alice accepted ownership');
 
   console.log('\n=== Phase 5: Combined Contract ===');
 
   // Grant roles on combined contract
-  await combined.grantRolePublic(MINTER_ROLE, bob.address);
+  tx = await combined.write.grantRolePublic([MINTER_ROLE, bob.account.address]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Granted MINTER_ROLE to bob on combined contract');
 
   // Transfer ownership on combined contract
-  await combined.transferOwnershipPublic(charlie.address);
+  tx = await combined.write.transferOwnershipPublic([charlie.account.address]);
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Started ownership transfer to charlie on combined contract');
 
-  await combined.connect(charlie).acceptOwnershipPublic();
+  const combinedAsCharlie = await viem.getContractAt(
+    'CombinedMock',
+    combined.address,
+    { client: { wallet: charlie } }
+  );
+  tx = await combinedAsCharlie.write.acceptOwnershipPublic();
+  await publicClient.waitForTransactionReceipt({ hash: tx });
   console.log('Charlie accepted ownership on combined contract');
 
   console.log('\n=== Event Generation Complete ===');

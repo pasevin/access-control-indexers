@@ -1,37 +1,35 @@
-import { ethers } from 'hardhat';
+import { network } from 'hardhat';
 
 async function main() {
-  const [deployer] = await ethers.getSigners();
-  console.log('Deploying contracts with account:', deployer.address);
+  const { viem, networkName } = await network.connect();
+  const [deployer] = await viem.getWalletClients();
+
+  console.log('Deploying contracts to:', networkName);
+  console.log('Deployer address:', deployer.account.address);
 
   // Deploy AccessControlMock
-  const AccessControlMock = await ethers.getContractFactory(
-    'AccessControlMock'
-  );
-  const accessControl = await AccessControlMock.deploy(deployer.address);
-  await accessControl.waitForDeployment();
-  console.log(
-    'AccessControlMock deployed to:',
-    await accessControl.getAddress()
-  );
+  const accessControl = await viem.deployContract('AccessControlMock', [
+    deployer.account.address,
+  ]);
+  console.log('AccessControlMock deployed to:', accessControl.address);
 
   // Deploy OwnableMock
-  const OwnableMock = await ethers.getContractFactory('OwnableMock');
-  const ownable = await OwnableMock.deploy(deployer.address);
-  await ownable.waitForDeployment();
-  console.log('OwnableMock deployed to:', await ownable.getAddress());
+  const ownable = await viem.deployContract('OwnableMock', [
+    deployer.account.address,
+  ]);
+  console.log('OwnableMock deployed to:', ownable.address);
 
   // Deploy Ownable2StepMock
-  const Ownable2StepMock = await ethers.getContractFactory('Ownable2StepMock');
-  const ownable2Step = await Ownable2StepMock.deploy(deployer.address);
-  await ownable2Step.waitForDeployment();
-  console.log('Ownable2StepMock deployed to:', await ownable2Step.getAddress());
+  const ownable2Step = await viem.deployContract('Ownable2StepMock', [
+    deployer.account.address,
+  ]);
+  console.log('Ownable2StepMock deployed to:', ownable2Step.address);
 
   // Deploy CombinedMock
-  const CombinedMock = await ethers.getContractFactory('CombinedMock');
-  const combined = await CombinedMock.deploy(deployer.address);
-  await combined.waitForDeployment();
-  console.log('CombinedMock deployed to:', await combined.getAddress());
+  const combined = await viem.deployContract('CombinedMock', [
+    deployer.account.address,
+  ]);
+  console.log('CombinedMock deployed to:', combined.address);
 
   console.log('\nDeployment complete!');
 }

@@ -2,6 +2,10 @@
 
 Test contracts for OpenZeppelin Access Control indexers on EVM networks.
 
+## Requirements
+
+- Node.js v22.10.0 or later (required for Hardhat 3)
+
 ## Contracts
 
 - **AccessControlMock**: Standard AccessControl implementation

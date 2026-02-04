@@ -26,7 +26,14 @@
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "ethers": "^5.7.0",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@subql/common-ethereum>ethers": "^5.7.0",
+      "@subql/cli>ethers": "^5.7.0"
+    }
   }
 }
