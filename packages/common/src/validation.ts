@@ -2,46 +2,129 @@
  * Validation utilities for Access Control indexers
  */
 
-/**
- * Validates a role identifier
- * EVM: bytes32 hex string (66 chars with 0x prefix)
- * Stellar: Symbol (max 32 chars, alphanumeric + underscore)
- */
-export function isValidRole(
-  role: string,
-  ecosystem: 'evm' | 'stellar'
-): boolean {
-  if (!role) return false;
+// ============================================================================
+// Event Validation Types & Utilities
+// ============================================================================
 
-  if (ecosystem === 'evm') {
-    // EVM roles are bytes32 (0x + 64 hex chars)
-    return /^0x[a-fA-F0-9]{64}$/.test(role);
-  } else {
-    // Stellar roles are Symbols (max 32 chars, alphanumeric + underscore)
-    return /^[a-zA-Z_][a-zA-Z0-9_]{0,31}$/.test(role);
-  }
+/**
+ * Result of event validation
+ */
+export interface EventValidationResult {
+  valid: boolean;
+  error?: string;
 }
 
 /**
- * Validates a transaction hash
+ * Context for event validation logging
  */
-export function isValidTxHash(
-  txHash: string,
-  ecosystem: 'evm' | 'stellar'
-): boolean {
-  if (!txHash) return false;
-
-  if (ecosystem === 'evm') {
-    // EVM tx hashes are 0x + 64 hex chars
-    return /^0x[a-fA-F0-9]{64}$/.test(txHash);
-  } else {
-    // Stellar tx hashes are 64 hex chars (no 0x prefix)
-    return /^[a-fA-F0-9]{64}$/.test(txHash);
-  }
+export interface EventContext {
+  network: string;
+  blockNumber: number | string | bigint;
+  transactionHash?: string;
+  eventType: string;
 }
 
 /**
- * Validates a block/ledger number
+ * Creates a validation failure result
+ */
+function failure(error: string): EventValidationResult {
+  return { valid: false, error };
+}
+
+/**
+ * Successful validation result
+ */
+const SUCCESS: EventValidationResult = { valid: true };
+
+/**
+ * Formats event context for error messages
+ */
+function formatContext(ctx: EventContext): string {
+  const txPart = ctx.transactionHash ? `, tx: ${ctx.transactionHash}` : '';
+  return `${ctx.eventType} at block ${ctx.blockNumber}${txPart} on ${ctx.network}`;
+}
+
+// ============================================================================
+// Generic Field Validators
+// ============================================================================
+
+/**
+ * Validates that required fields exist and are non-null/undefined
+ */
+export function validateRequiredFields<T extends Record<string, unknown>>(
+  data: T,
+  requiredFields: (keyof T)[],
+  context: EventContext
+): EventValidationResult {
+  for (const field of requiredFields) {
+    const value = data[field];
+    if (value === undefined || value === null) {
+      return failure(
+        `Missing required field "${String(field)}" for ${formatContext(context)}`
+      );
+    }
+  }
+  return SUCCESS;
+}
+
+/**
+ * Validates an array has minimum required length with non-null elements
+ */
+export function validateArrayElements<T>(
+  arr: T[] | undefined | null,
+  requiredIndices: number[],
+  fieldName: string,
+  context: EventContext
+): EventValidationResult {
+  if (!arr) {
+    return failure(`Missing ${fieldName} for ${formatContext(context)}`);
+  }
+
+  for (const index of requiredIndices) {
+    if (arr[index] === undefined || arr[index] === null) {
+      return failure(
+        `Missing ${fieldName}[${index}] for ${formatContext(context)}`
+      );
+    }
+  }
+  return SUCCESS;
+}
+
+
+// ============================================================================
+// Logging Utilities
+// ============================================================================
+
+/**
+ * Logs validation failure as a warning and returns whether event should be skipped
+ */
+export function logAndSkipIfInvalid(result: EventValidationResult): boolean {
+  if (!result.valid) {
+    console.warn(`Skipping malformed event: ${result.error}`);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Convenience function: validate and log in one call
+ * Returns true if event is VALID (should be processed)
+ * Returns false if event is INVALID (should be skipped)
+ */
+export function isValidEvent(result: EventValidationResult): boolean {
+  if (!result.valid) {
+    console.warn(`Skipping malformed event: ${result.error}`);
+    return false;
+  }
+  return true;
+}
+
+// ============================================================================
+// Generic Field-Level Validators
+// ============================================================================
+
+/**
+ * Validates a block/ledger number (works for both EVM and Stellar)
  */
 export function isValidBlockNumber(
   blockNumber: unknown
@@ -64,9 +147,25 @@ export function isValidTimestamp(timestamp: unknown): timestamp is Date {
 }
 
 /**
- * Validates a ledger number (Stellar-specific)
+ * Validates a hex string has expected format
  */
-export function isValidLedgerNumber(ledger: unknown): ledger is number {
-  if (typeof ledger !== 'number') return false;
-  return Number.isInteger(ledger) && ledger >= 0;
+export function isValidHex(
+  value: string,
+  expectedLength?: number,
+  requirePrefix: boolean = true
+): boolean {
+  if (!value) return false;
+
+  const hexPattern = requirePrefix
+    ? /^0x[a-fA-F0-9]+$/
+    : /^(0x)?[a-fA-F0-9]+$/;
+
+  if (!hexPattern.test(value)) return false;
+
+  if (expectedLength !== undefined) {
+    const hexPart = value.startsWith('0x') ? value.slice(2) : value;
+    return hexPart.length === expectedLength;
+  }
+
+  return true;
 }

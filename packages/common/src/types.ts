@@ -20,6 +20,12 @@ export enum EventType {
   ADMIN_TRANSFER_INITIATED = 'ADMIN_TRANSFER_INITIATED',
   ADMIN_TRANSFER_COMPLETED = 'ADMIN_TRANSFER_COMPLETED',
   ADMIN_RENOUNCED = 'ADMIN_RENOUNCED',
+
+  // Default admin events (EVM AccessControlDefaultAdminRules)
+  DEFAULT_ADMIN_TRANSFER_SCHEDULED = 'DEFAULT_ADMIN_TRANSFER_SCHEDULED',
+  DEFAULT_ADMIN_TRANSFER_CANCELED = 'DEFAULT_ADMIN_TRANSFER_CANCELED',
+  DEFAULT_ADMIN_DELAY_CHANGE_SCHEDULED = 'DEFAULT_ADMIN_DELAY_CHANGE_SCHEDULED',
+  DEFAULT_ADMIN_DELAY_CHANGE_CANCELED = 'DEFAULT_ADMIN_DELAY_CHANGE_CANCELED',
 }
 
 /**
@@ -100,10 +106,26 @@ export interface AdminEventData extends BaseEventData {
 }
 
 /**
+ * Default admin event data (EVM AccessControlDefaultAdminRules)
+ */
+export interface DefaultAdminEventData extends BaseEventData {
+  eventType:
+    | EventType.DEFAULT_ADMIN_TRANSFER_SCHEDULED
+    | EventType.DEFAULT_ADMIN_TRANSFER_CANCELED
+    | EventType.DEFAULT_ADMIN_DELAY_CHANGE_SCHEDULED
+    | EventType.DEFAULT_ADMIN_DELAY_CHANGE_CANCELED;
+  newAdmin?: string; // For transfer scheduled
+  acceptSchedule?: bigint; // Timestamp when transfer can be accepted
+  newDelay?: bigint; // New delay value
+  effectSchedule?: bigint; // Timestamp when delay change takes effect
+}
+
+/**
  * Union type for all event data
  */
 export type AccessControlEventData =
   | RoleEventData
   | RoleAdminChangedEventData
   | OwnershipEventData
-  | AdminEventData;
+  | AdminEventData
+  | DefaultAdminEventData;
