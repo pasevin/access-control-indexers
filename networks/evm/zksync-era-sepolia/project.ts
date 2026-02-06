@@ -8,6 +8,12 @@ import {
  * ZkSync Era Sepolia Project Configuration
  * Chain ID: 300
  */
+import { ZKSYNC_ERA_SEPOLIA } from "@oz-indexers/network-config";
+
+// Start block can be overridden via START_BLOCK env var (e.g., for staging deployments)
+const startBlock =
+  Number(process.env.START_BLOCK) || ZKSYNC_ERA_SEPOLIA.startBlock;
+
 const project: EthereumProject = {
   specVersion: "1.0.0",
   version: "1.0.0",
@@ -44,7 +50,7 @@ const project: EthereumProject = {
     // AccessControl events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 6700000,
+      startBlock,
       options: {
         abi: "AccessControl",
       },
@@ -78,7 +84,7 @@ const project: EthereumProject = {
     // Ownable events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 6700000,
+      startBlock,
       options: {
         abi: "Ownable",
       },
@@ -102,7 +108,7 @@ const project: EthereumProject = {
     // Ownable2Step events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 6700000,
+      startBlock,
       options: {
         abi: "Ownable2Step",
       },
@@ -126,7 +132,7 @@ const project: EthereumProject = {
     // AccessControlDefaultAdminRules events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 6700000,
+      startBlock,
       options: {
         abi: "AccessControlDefaultAdminRules",
       },

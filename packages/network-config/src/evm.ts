@@ -222,7 +222,7 @@ export const ARBITRUM_SEPOLIA: EvmNetworkConfig = {
   chainId: 421614,
   rpcUrl: "https://sepolia-rollup.arbitrum.io/rpc",
   explorerUrl: "https://sepolia.arbiscan.io",
-  startBlock: 1,
+  startBlock: 240150000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -235,7 +235,7 @@ export const POLYGON_AMOY: EvmNetworkConfig = {
   chainId: 80002,
   rpcUrl: "https://rpc-amoy.polygon.technology",
   explorerUrl: "https://amoy.polygonscan.com",
-  startBlock: 1,
+  startBlock: 33360000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -248,7 +248,7 @@ export const POLYGON_ZKEVM_CARDONA: EvmNetworkConfig = {
   chainId: 2442,
   rpcUrl: "https://rpc.cardona.zkevm-rpc.com",
   explorerUrl: "https://cardona-zkevm.polygonscan.com",
-  startBlock: 1,
+  startBlock: 20200000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -261,7 +261,7 @@ export const BASE_SEPOLIA: EvmNetworkConfig = {
   chainId: 84532,
   rpcUrl: "https://sepolia.base.org",
   explorerUrl: "https://sepolia.basescan.org",
-  startBlock: 1,
+  startBlock: 37290000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -274,7 +274,7 @@ export const BSC_TESTNET: EvmNetworkConfig = {
   chainId: 97,
   rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
   explorerUrl: "https://testnet.bscscan.com",
-  startBlock: 1,
+  startBlock: 88720000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -287,7 +287,7 @@ export const OPTIMISM_SEPOLIA: EvmNetworkConfig = {
   chainId: 11155420,
   rpcUrl: "https://sepolia.optimism.io",
   explorerUrl: "https://sepolia-optimism.etherscan.io",
-  startBlock: 1,
+  startBlock: 39300000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -300,7 +300,7 @@ export const AVALANCHE_FUJI: EvmNetworkConfig = {
   chainId: 43113,
   rpcUrl: "https://api.avax-test.network/ext/bc/C/rpc",
   explorerUrl: "https://testnet.snowscan.xyz",
-  startBlock: 1,
+  startBlock: 51540000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -313,7 +313,7 @@ export const ZKSYNC_ERA_SEPOLIA: EvmNetworkConfig = {
   chainId: 300,
   rpcUrl: "https://sepolia.era.zksync.dev",
   explorerUrl: "https://sepolia.explorer.zksync.io",
-  startBlock: 1,
+  startBlock: 6700000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -326,7 +326,7 @@ export const SCROLL_SEPOLIA: EvmNetworkConfig = {
   chainId: 534351,
   rpcUrl: "https://sepolia-rpc.scroll.io",
   explorerUrl: "https://sepolia.scrollscan.dev",
-  startBlock: 1,
+  startBlock: 16580000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -339,7 +339,7 @@ export const LINEA_SEPOLIA: EvmNetworkConfig = {
   chainId: 59141,
   rpcUrl: "https://rpc.sepolia.linea.build",
   explorerUrl: "https://sepolia.lineascan.build",
-  startBlock: 1,
+  startBlock: 24320000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -365,7 +365,7 @@ export const POLKADOT_HUB_TESTNET: EvmNetworkConfig = {
   chainId: 420420417,
   rpcUrl: "https://services.polkadothub-rpc.com/testnet",
   explorerUrl: "https://polkadot.testnet.routescan.io",
-  startBlock: 1,
+  startBlock: 5000000,
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -378,7 +378,7 @@ export const MOONBASE_ALPHA_TESTNET: EvmNetworkConfig = {
   chainId: 1287,
   rpcUrl: "https://rpc.api.moonbase.moonbeam.network",
   explorerUrl: "https://moonbase.moonscan.io",
-  startBlock: 1,
+  startBlock: 15120000,
   subqlNode: "@subql/node-ethereum",
 };
 

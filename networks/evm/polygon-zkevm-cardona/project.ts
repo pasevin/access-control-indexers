@@ -8,6 +8,12 @@ import {
  * Polygon zkEVM Cardona Project Configuration
  * Chain ID: 2442
  */
+import { POLYGON_ZKEVM_CARDONA } from "@oz-indexers/network-config";
+
+// Start block can be overridden via START_BLOCK env var (e.g., for staging deployments)
+const startBlock =
+  Number(process.env.START_BLOCK) || POLYGON_ZKEVM_CARDONA.startBlock;
+
 const project: EthereumProject = {
   specVersion: "1.0.0",
   version: "1.0.0",
@@ -44,7 +50,7 @@ const project: EthereumProject = {
     // AccessControl events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 20200000,
+      startBlock,
       options: {
         abi: "AccessControl",
       },
@@ -78,7 +84,7 @@ const project: EthereumProject = {
     // Ownable events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 20200000,
+      startBlock,
       options: {
         abi: "Ownable",
       },
@@ -102,7 +108,7 @@ const project: EthereumProject = {
     // Ownable2Step events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 20200000,
+      startBlock,
       options: {
         abi: "Ownable2Step",
       },
@@ -126,7 +132,7 @@ const project: EthereumProject = {
     // AccessControlDefaultAdminRules events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 20200000,
+      startBlock,
       options: {
         abi: "AccessControlDefaultAdminRules",
       },

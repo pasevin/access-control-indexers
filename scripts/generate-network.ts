@@ -80,6 +80,7 @@ const packageJson = {
   dependencies: {
     "@oz-indexers/common": "workspace:*",
     "@oz-indexers/evm-handlers": "workspace:*",
+    "@oz-indexers/network-config": "workspace:*",
     "@subql/common": "latest",
     "@subql/common-ethereum": "latest",
     "@subql/types-core": "latest",
@@ -113,6 +114,14 @@ const projectTs = `import {
  * ${name} Project Configuration
  * Chain ID: ${chainId}
  */
+
+// TODO: Add this network to packages/network-config/src/evm.ts then import here:
+// import { NETWORK_EXPORT } from '@oz-indexers/network-config';
+// const startBlock = Number(process.env.START_BLOCK) || NETWORK_EXPORT.startBlock;
+
+// Start block can be overridden via START_BLOCK env var (e.g., for staging deployments)
+const startBlock = Number(process.env.START_BLOCK) || ${startBlock};
+
 const project: EthereumProject = {
   specVersion: '1.0.0',
   version: '1.0.0',
@@ -145,7 +154,7 @@ const project: EthereumProject = {
     // AccessControl events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: ${startBlock},
+      startBlock,
       options: {
         abi: 'AccessControl',
       },
@@ -176,7 +185,7 @@ const project: EthereumProject = {
     // Ownable events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: ${startBlock},
+      startBlock,
       options: {
         abi: 'Ownable',
       },
@@ -197,7 +206,7 @@ const project: EthereumProject = {
     // Ownable2Step events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: ${startBlock},
+      startBlock,
       options: {
         abi: 'Ownable2Step',
       },
@@ -218,7 +227,7 @@ const project: EthereumProject = {
     // AccessControlDefaultAdminRules events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: ${startBlock},
+      startBlock,
       options: {
         abi: 'AccessControlDefaultAdminRules',
       },
@@ -428,6 +437,8 @@ console.log(`
    Start Block: ${startBlock}
 
 📝 Next steps:
-   1. pnpm install
-   2. pnpm run build:network ${networkId}
+   1. Add network config to packages/network-config/src/evm.ts
+   2. Update project.ts to import startBlock from network-config
+   3. pnpm install
+   4. pnpm run build:network ${networkId}
 `);

@@ -27,7 +27,8 @@
     "@subql/common-stellar": "^4.5.0",
     "@subql/types-core": "latest",
     "@subql/types-stellar": "latest",
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.0",
+    "@oz-indexers/network-config": "workspace:*"
   },
   "devDependencies": {
     "@subql/cli": "latest",

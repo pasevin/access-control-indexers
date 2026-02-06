@@ -25,7 +25,8 @@
     "@subql/common-ethereum": "latest",
     "@subql/types-core": "latest",
     "tslib": "^2.6.0",
-    "@subql/types-ethereum": "latest"
+    "@subql/types-ethereum": "latest",
+    "@oz-indexers/network-config": "workspace:*"
   },
   "devDependencies": {
     "@subql/cli": "latest",

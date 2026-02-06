@@ -8,6 +8,13 @@ import {
  * Stellar Testnet Project Configuration
  * OpenZeppelin Access Control Indexer
  */
+
+import { STELLAR_TESTNET } from "@oz-indexers/network-config";
+
+// Start block can be overridden via START_BLOCK env var (e.g., for staging deployments)
+const startBlock =
+  Number(process.env.START_BLOCK) || STELLAR_TESTNET.startBlock;
+
 const project: StellarProject = {
   specVersion: "1.0.0",
   name: "oz-access-control-stellar-testnet",
@@ -38,11 +45,10 @@ const project: StellarProject = {
       process.env.STELLAR_TESTNET_SOROBAN_URL ||
       "https://soroban-testnet.stellar.org",
   },
-  // Start block 14000: OZ Stellar AccessControl contracts deployment on testnet
   dataSources: [
     {
       kind: StellarDatasourceKind.Runtime,
-      startBlock: 14000,
+      startBlock,
       mapping: {
         file: "./dist/index.js",
         handlers: [

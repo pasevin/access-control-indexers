@@ -8,6 +8,13 @@ import {
  * Stellar Mainnet Project Configuration
  * OpenZeppelin Access Control Indexer
  */
+
+import { STELLAR_MAINNET } from "@oz-indexers/network-config";
+
+// Start block can be overridden via START_BLOCK env var (e.g., for staging deployments)
+const startBlock =
+  Number(process.env.START_BLOCK) || STELLAR_MAINNET.startBlock;
+
 const project: StellarProject = {
   specVersion: "1.0.0",
   name: "oz-access-control-stellar-mainnet",
@@ -37,11 +44,10 @@ const project: StellarProject = {
       process.env.STELLAR_MAINNET_SOROBAN_URL ||
       "https://soroban-rpc.mainnet.stellar.gateway.fm",
   },
-  // Start block 60377000: OZ Stellar AccessControl contracts launch on mainnet
   dataSources: [
     {
       kind: StellarDatasourceKind.Runtime,
-      startBlock: 60377000,
+      startBlock,
       mapping: {
         file: "./dist/index.js",
         handlers: [

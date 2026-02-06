@@ -8,6 +8,11 @@ import {
  * Monad Testnet Project Configuration
  * Chain ID: 10143
  */
+import { MONAD_TESTNET } from "@oz-indexers/network-config";
+
+// Start block can be overridden via START_BLOCK env var (e.g., for staging deployments)
+const startBlock = Number(process.env.START_BLOCK) || MONAD_TESTNET.startBlock;
+
 const project: EthereumProject = {
   specVersion: "1.0.0",
   version: "1.0.0",
@@ -39,12 +44,11 @@ const project: EthereumProject = {
       process.env.MONAD_TESTNET_RPC_URL || "https://testnet-rpc.monad.xyz",
     ],
   },
-  // Start block 10540000: earliest OZ contract deployments on Monad testnet
   dataSources: [
     // AccessControl events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 10540000,
+      startBlock,
       options: {
         abi: "AccessControl",
       },
@@ -78,7 +82,7 @@ const project: EthereumProject = {
     // Ownable events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 10540000,
+      startBlock,
       options: {
         abi: "Ownable",
       },
@@ -102,7 +106,7 @@ const project: EthereumProject = {
     // Ownable2Step events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 10540000,
+      startBlock,
       options: {
         abi: "Ownable2Step",
       },
@@ -126,7 +130,7 @@ const project: EthereumProject = {
     // AccessControlDefaultAdminRules events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 10540000,
+      startBlock,
       options: {
         abi: "AccessControlDefaultAdminRules",
       },

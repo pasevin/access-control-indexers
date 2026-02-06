@@ -8,6 +8,12 @@ import {
  * Ethereum Mainnet Project Configuration
  * Chain ID: 1
  */
+import { ETHEREUM_MAINNET } from "@oz-indexers/network-config";
+
+// Start block can be overridden via START_BLOCK env var (e.g., for staging deployments)
+const startBlock =
+  Number(process.env.START_BLOCK) || ETHEREUM_MAINNET.startBlock;
+
 const project: EthereumProject = {
   specVersion: "1.0.0",
   version: "1.0.0",
@@ -39,12 +45,11 @@ const project: EthereumProject = {
         "https://ethereum-rpc.publicnode.com",
     ],
   },
-  // Start block 4719568: OpenZeppelin Contracts v2 (Ownable) release on Ethereum (Dec 2017)
   dataSources: [
     // AccessControl events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 4719568,
+      startBlock,
       options: {
         abi: "AccessControl",
       },
@@ -78,7 +83,7 @@ const project: EthereumProject = {
     // Ownable events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 4719568,
+      startBlock,
       options: {
         abi: "Ownable",
       },
@@ -102,7 +107,7 @@ const project: EthereumProject = {
     // Ownable2Step events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 4719568,
+      startBlock,
       options: {
         abi: "Ownable2Step",
       },
@@ -126,7 +131,7 @@ const project: EthereumProject = {
     // AccessControlDefaultAdminRules events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 4719568,
+      startBlock,
       options: {
         abi: "AccessControlDefaultAdminRules",
       },
