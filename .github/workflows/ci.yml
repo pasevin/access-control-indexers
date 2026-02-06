@@ -73,6 +73,9 @@ jobs:
       - name: Build packages
         run: pnpm --filter './packages/**' build
 
+      - name: Run codegen
+        run: pnpm --filter "@oz-indexers/${{ matrix.network }}" codegen
+
       - name: Build indexer
         run: pnpm --filter "@oz-indexers/${{ matrix.network }}" build
 

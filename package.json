@@ -22,7 +22,7 @@
     "test": "pnpm -r test",
     "test:evm": "pnpm --filter './networks/evm/**' test",
     "test:stellar": "pnpm --filter './networks/stellar/**' test",
-    "lint": "pnpm -r lint",
+    "lint": "pnpm -r --if-present lint",
     "clean": "pnpm -r clean",
     "generate:network": "tsx scripts/generate-network.ts",
     "sync:schema": "tsx scripts/sync-schema.ts",
