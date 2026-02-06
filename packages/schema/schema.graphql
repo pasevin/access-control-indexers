@@ -31,6 +31,10 @@ type AccessControlEvent @entity {
   newAdmin: String # New admin address
   # Stellar-specific: Pending transfer expiration
   liveUntilLedger: Int # Expiration ledger for pending transfers
+  # EVM AccessControlDefaultAdminRules fields
+  acceptSchedule: BigInt # Scheduled timestamp for default admin transfer acceptance
+  newDelay: BigInt # New delay value for default admin delay change
+  effectSchedule: BigInt # Scheduled timestamp for delay change to take effect
 }
 
 # =============================================================================
@@ -49,6 +53,11 @@ enum EventType {
   ADMIN_TRANSFER_INITIATED # Admin transfer initiated with expiration
   ADMIN_TRANSFER_COMPLETED # Admin transfer accepted/completed
   ADMIN_RENOUNCED # Admin role renounced
+  # Default admin events (EVM AccessControlDefaultAdminRules)
+  DEFAULT_ADMIN_TRANSFER_SCHEDULED # Two-step default admin transfer scheduled
+  DEFAULT_ADMIN_TRANSFER_CANCELED # Default admin transfer canceled
+  DEFAULT_ADMIN_DELAY_CHANGE_SCHEDULED # Default admin delay change scheduled
+  DEFAULT_ADMIN_DELAY_CHANGE_CANCELED # Default admin delay change canceled
 }
 
 # =============================================================================
