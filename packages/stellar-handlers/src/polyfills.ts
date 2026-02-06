@@ -3,9 +3,14 @@
  *
  * The SubQuery sandbox environment may not provide TextEncoder/TextDecoder
  * which are required by the Stellar SDK. These polyfills ensure compatibility.
+ *
+ * IMPORTANT: This module self-executes on import to ensure polyfills are
+ * available before any other module (e.g. @stellar/stellar-base) is evaluated.
+ * It MUST be imported before any module that uses TextEncoder/TextDecoder.
  */
-export function ensurePolyfills(): void {
-  if (typeof TextEncoder === 'undefined') {
+
+function applyPolyfills(): void {
+  if (typeof TextEncoder === "undefined") {
     (globalThis as any).TextEncoder = class TextEncoder {
       encode(input: string): Uint8Array {
         const bytes: number[] = [];
@@ -23,9 +28,7 @@ export function ensurePolyfills(): void {
             );
           } else {
             i++;
-            c =
-              0x10000 +
-              (((c & 0x3ff) << 10) | (input.charCodeAt(i) & 0x3ff));
+            c = 0x10000 + (((c & 0x3ff) << 10) | (input.charCodeAt(i) & 0x3ff));
             bytes.push(
               0xf0 | (c >> 18),
               0x80 | ((c >> 12) & 0x3f),
@@ -39,10 +42,10 @@ export function ensurePolyfills(): void {
     };
   }
 
-  if (typeof TextDecoder === 'undefined') {
+  if (typeof TextDecoder === "undefined") {
     (globalThis as any).TextDecoder = class TextDecoder {
       decode(input: Uint8Array): string {
-        let result = '';
+        let result = "";
         let i = 0;
         while (i < input.length) {
           const c = input[i];
@@ -79,4 +82,17 @@ export function ensurePolyfills(): void {
       }
     };
   }
+}
+
+// Self-execute polyfills on module load so they're available
+// before @stellar/stellar-base (or any other dependency) is evaluated.
+applyPolyfills();
+
+/**
+ * Explicit function for consumers who want to ensure polyfills are loaded.
+ * This is now a no-op since polyfills are applied on import, but kept
+ * for backward compatibility.
+ */
+export function ensurePolyfills(): void {
+  applyPolyfills();
 }

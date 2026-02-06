@@ -23,9 +23,13 @@
  * ```
  */
 
+// Polyfills MUST be imported first — before any module that depends on
+// TextEncoder/TextDecoder (e.g. @stellar/stellar-base via ./validation).
+import "./polyfills";
+
 // Context and initialization
-export { initializeHandlers, getContext, getNetworkId } from './context';
-export type { InitConfig } from './context';
+export { initializeHandlers, getContext, getNetworkId } from "./context";
+export type { InitConfig } from "./context";
 
 // Type definitions
 export type {
@@ -43,7 +47,7 @@ export type {
   ContractOwnershipInstance,
   ContractInstance,
   Store,
-} from './types';
+} from "./types";
 
 // Handlers
 export {
@@ -56,7 +60,7 @@ export {
   handleOwnershipTransferStarted,
   handleOwnershipTransferCompleted,
   handleOwnershipRenounced,
-} from './handlers';
+} from "./handlers";
 
 // Validation
 export {
@@ -67,7 +71,7 @@ export {
   hasValidLedgerInfo,
   isValidStellarTxHash,
   isValidLedgerNumber,
-} from './validation';
+} from "./validation";
 
 // Polyfills
-export { ensurePolyfills } from './polyfills';
+export { ensurePolyfills } from "./polyfills";
