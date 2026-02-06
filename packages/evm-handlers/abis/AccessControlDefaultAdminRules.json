@@ -1,0 +1,52 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint48",
+        "name": "acceptSchedule",
+        "type": "uint48"
+      }
+    ],
+    "name": "DefaultAdminTransferScheduled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "DefaultAdminTransferCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint48",
+        "name": "newDelay",
+        "type": "uint48"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint48",
+        "name": "effectSchedule",
+        "type": "uint48"
+      }
+    ],
+    "name": "DefaultAdminDelayChangeScheduled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "DefaultAdminDelayChangeCanceled",
+    "type": "event"
+  }
+]

@@ -3,7 +3,7 @@
  * Shared EVM mapping handlers for OpenZeppelin Access Control indexers
  *
  * This package provides:
- * - Mapping handlers for AccessControl, Ownable, and Ownable2Step events
+ * - Mapping handlers for AccessControl, Ownable, Ownable2Step, and AccessControlDefaultAdminRules events
  * - A clean initialization API for setting up network-specific configuration
  * - Type definitions for SubQuery entities
  *
@@ -47,7 +47,25 @@ export {
   handleRoleAdminChanged,
   handleOwnershipTransferred,
   handleOwnershipTransferStarted,
+  // AccessControlDefaultAdminRules handlers
+  handleDefaultAdminTransferScheduled,
+  handleDefaultAdminTransferCanceled,
+  handleDefaultAdminDelayChangeScheduled,
+  handleDefaultAdminDelayChangeCanceled,
 } from './handlers';
 
 // Utilities
 export { formatRole, normalizeAddress, isOwnershipRenounce } from './utils';
+
+// Validation
+export {
+  // Event validation
+  validateEvmEvent,
+  validateEvmTopics,
+  EVM_EVENT_TOPIC_REQUIREMENTS,
+  // Field validators
+  isValidEvmAddress,
+  isValidEvmRole,
+  isValidEvmTxHash,
+  isValidEvmBlockNumber,
+} from './validation';
