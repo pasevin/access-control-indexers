@@ -72,7 +72,7 @@ const packageJson = {
   },
   repository: {
     type: "git",
-    url: "https://github.com/OpenZeppelin/access-control-indexers.git",
+    url: "https://github.com/pasevin/access-control-indexers.git",
     directory: `networks/evm/${networkId}`,
   },
   author: "OpenZeppelin",
@@ -133,7 +133,7 @@ const project: EthereumProject = {
       version: '*',
     },
   },
-  repository: 'https://github.com/OpenZeppelin/access-control-indexers',
+  repository: 'https://github.com/pasevin/access-control-indexers',
   schema: {
     file: '../../../packages/schema/schema.graphql',
   },

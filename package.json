@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "OpenZeppelin Access Control indexers for multiple blockchain networks",
-  "repository": "github:OpenZeppelin/access-control-indexers",
+  "repository": "github:pasevin/access-control-indexers",
   "author": "Aleksandr Pasevin",
   "license": "MIT",
   "email": "pasevin@gmail.com",

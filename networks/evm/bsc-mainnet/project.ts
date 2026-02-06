@@ -29,7 +29,7 @@ const project: EthereumProject = {
       version: "*",
     },
   },
-  repository: "https://github.com/OpenZeppelin/access-control-indexers",
+  repository: "https://github.com/pasevin/access-control-indexers",
   schema: {
     file: "../../../packages/schema/schema.graphql",
   },
