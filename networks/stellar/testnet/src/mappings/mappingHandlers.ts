@@ -268,7 +268,7 @@ export async function handleRoleRevoked(event: SorobanEvent): Promise<void> {
   });
 
   const membershipId = generateRoleMembershipId(contractAddress, role, account);
-  await store.remove('RoleMembership', membershipId);
+  await RoleMembership.remove(membershipId);
   await updateContractMetadata(
     contractAddress,
     ContractType.ACCESS_CONTROL,
@@ -602,7 +602,7 @@ export async function handleOwnershipRenounced(
   });
 
   const ownershipId = generateContractId(contractAddress);
-  await store.remove('ContractOwnership', ownershipId);
+  await ContractOwnership.remove(ownershipId);
   await updateContractMetadata(
     contractAddress,
     ContractType.OWNABLE,
