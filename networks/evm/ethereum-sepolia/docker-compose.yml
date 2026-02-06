@@ -29,8 +29,9 @@ services:
       DB_PORT: 5432
     volumes:
       - ./:/app
-      - ../../../packages/schema:/app/packages/schema:ro
-      - ../../../packages/evm-handlers/abis:/app/packages/evm-handlers/abis:ro
+      # Mount packages at root level to match relative paths (../../../packages from /app)
+      - ../../../packages/schema:/packages/schema:ro
+      - ../../../packages/evm-handlers/abis:/packages/evm-handlers/abis:ro
     command:
       - -f=/app
       - --db-schema=app
