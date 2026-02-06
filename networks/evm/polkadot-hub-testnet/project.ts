@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '420420417',
-    endpoint: ['https://services.polkadothub-rpc.com/testnet'],
+    endpoint: [process.env.POLKADOT_HUB_TESTNET_RPC_URL || 'https://services.polkadothub-rpc.com/testnet'],
   },
   dataSources: [
     // AccessControl events

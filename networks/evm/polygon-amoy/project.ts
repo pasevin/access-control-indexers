@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '80002',
-    endpoint: ['https://rpc-amoy.polygon.technology'],
+    endpoint: [process.env.POLYGON_AMOY_RPC_URL || 'https://rpc-amoy.polygon.technology'],
   },
   dataSources: [
     // AccessControl events

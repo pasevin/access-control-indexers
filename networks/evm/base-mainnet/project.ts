@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '8453',
-    endpoint: ['https://mainnet.base.org'],
+    endpoint: [process.env.BASE_MAINNET_RPC_URL || 'https://mainnet.base.org'],
   },
   dataSources: [
     // AccessControl events

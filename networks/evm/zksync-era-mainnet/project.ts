@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '324',
-    endpoint: ['https://mainnet.era.zksync.io'],
+    endpoint: [process.env.ZKSYNC_ERA_MAINNET_RPC_URL || 'https://mainnet.era.zksync.io'],
   },
   dataSources: [
     // AccessControl events

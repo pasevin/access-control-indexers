@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '10',
-    endpoint: ['https://mainnet.optimism.io'],
+    endpoint: [process.env.OPTIMISM_MAINNET_RPC_URL || 'https://mainnet.optimism.io'],
   },
   dataSources: [
     // AccessControl events

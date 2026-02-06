@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '42161',
-    endpoint: ['https://arb1.arbitrum.io/rpc'],
+    endpoint: [process.env.ARBITRUM_MAINNET_RPC_URL || 'https://arb1.arbitrum.io/rpc'],
   },
   dataSources: [
     // AccessControl events

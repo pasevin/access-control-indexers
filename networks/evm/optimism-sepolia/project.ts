@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '11155420',
-    endpoint: ['https://sepolia.optimism.io'],
+    endpoint: [process.env.OPTIMISM_SEPOLIA_RPC_URL || 'https://sepolia.optimism.io'],
   },
   dataSources: [
     // AccessControl events

@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '10143',
-    endpoint: ['https://testnet-rpc.monad.xyz'],
+    endpoint: [process.env.MONAD_TESTNET_RPC_URL || 'https://testnet-rpc.monad.xyz'],
   },
   dataSources: [
     // AccessControl events

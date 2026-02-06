@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '421614',
-    endpoint: ['https://sepolia-rollup.arbitrum.io/rpc'],
+    endpoint: [process.env.ARBITRUM_SEPOLIA_RPC_URL || 'https://sepolia-rollup.arbitrum.io/rpc'],
   },
   dataSources: [
     // AccessControl events

@@ -30,8 +30,8 @@ const project: StellarProject = {
   },
   network: {
     chainId: 'Public Global Stellar Network ; September 2015',
-    endpoint: ['https://horizon.stellar.org'],
-    sorobanEndpoint: 'https://soroban-rpc.mainnet.stellar.gateway.fm',
+    endpoint: [process.env.STELLAR_MAINNET_HORIZON_URL || 'https://horizon.stellar.org'],
+    sorobanEndpoint: process.env.STELLAR_MAINNET_SOROBAN_URL || 'https://soroban-rpc.mainnet.stellar.gateway.fm',
   },
   dataSources: [
     {

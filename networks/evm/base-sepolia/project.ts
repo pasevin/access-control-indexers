@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '84532',
-    endpoint: ['https://sepolia.base.org'],
+    endpoint: [process.env.BASE_SEPOLIA_RPC_URL || 'https://sepolia.base.org'],
   },
   dataSources: [
     // AccessControl events

@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '1284',
-    endpoint: ['https://rpc.api.moonbeam.network'],
+    endpoint: [process.env.MOONBEAM_MAINNET_RPC_URL || 'https://rpc.api.moonbeam.network'],
   },
   dataSources: [
     // AccessControl events

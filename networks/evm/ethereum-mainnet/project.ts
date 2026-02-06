@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '1',
-    endpoint: ['https://cloudflare-eth.com'],
+    endpoint: [process.env.ETHEREUM_MAINNET_RPC_URL || 'https://cloudflare-eth.com'],
   },
   dataSources: [
     // AccessControl events

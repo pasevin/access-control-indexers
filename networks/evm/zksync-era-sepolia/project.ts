@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '300',
-    endpoint: ['https://sepolia.era.zksync.dev'],
+    endpoint: [process.env.ZKSYNC_ERA_SEPOLIA_RPC_URL || 'https://sepolia.era.zksync.dev'],
   },
   dataSources: [
     // AccessControl events

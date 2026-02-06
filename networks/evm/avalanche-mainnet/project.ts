@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '43114',
-    endpoint: ['https://api.avax.network/ext/bc/C/rpc'],
+    endpoint: [process.env.AVALANCHE_MAINNET_RPC_URL || 'https://api.avax.network/ext/bc/C/rpc'],
   },
   dataSources: [
     // AccessControl events

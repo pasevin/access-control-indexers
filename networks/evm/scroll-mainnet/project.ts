@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '534352',
-    endpoint: ['https://rpc.scroll.io'],
+    endpoint: [process.env.SCROLL_MAINNET_RPC_URL || 'https://rpc.scroll.io'],
   },
   dataSources: [
     // AccessControl events

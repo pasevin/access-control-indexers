@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '534351',
-    endpoint: ['https://sepolia-rpc.scroll.io'],
+    endpoint: [process.env.SCROLL_SEPOLIA_RPC_URL || 'https://sepolia-rpc.scroll.io'],
   },
   dataSources: [
     // AccessControl events

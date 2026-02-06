@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '1101',
-    endpoint: ['https://zkevm-rpc.com'],
+    endpoint: [process.env.POLYGON_ZKEVM_MAINNET_RPC_URL || 'https://zkevm-rpc.com'],
   },
   dataSources: [
     // AccessControl events

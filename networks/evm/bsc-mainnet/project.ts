@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '56',
-    endpoint: ['https://bsc-dataseed.binance.org'],
+    endpoint: [process.env.BSC_MAINNET_RPC_URL || 'https://bsc-dataseed.binance.org'],
   },
   dataSources: [
     // AccessControl events

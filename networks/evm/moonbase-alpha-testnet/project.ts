@@ -34,7 +34,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '1287',
-    endpoint: ['https://rpc.api.moonbase.moonbeam.network'],
+    endpoint: [process.env.MOONBASE_ALPHA_TESTNET_RPC_URL || 'https://rpc.api.moonbase.moonbeam.network'],
   },
   dataSources: [
     // AccessControl events

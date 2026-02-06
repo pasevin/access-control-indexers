@@ -30,8 +30,8 @@ const project: StellarProject = {
   },
   network: {
     chainId: 'Test SDF Network ; September 2015',
-    endpoint: ['https://horizon-testnet.stellar.org'],
-    sorobanEndpoint: 'https://soroban-testnet.stellar.org',
+    endpoint: [process.env.STELLAR_TESTNET_HORIZON_URL || 'https://horizon-testnet.stellar.org'],
+    sorobanEndpoint: process.env.STELLAR_TESTNET_SOROBAN_URL || 'https://soroban-testnet.stellar.org',
   },
   dataSources: [
     {
