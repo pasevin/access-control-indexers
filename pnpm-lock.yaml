@@ -38,6 +38,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -56,13 +59,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/arbitrum-sepolia:
     dependencies:
@@ -72,6 +75,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -90,13 +96,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/avalanche-fuji:
     dependencies:
@@ -106,6 +112,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -124,13 +133,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/avalanche-mainnet:
     dependencies:
@@ -140,6 +149,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -158,13 +170,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/base-mainnet:
     dependencies:
@@ -174,6 +186,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -192,13 +207,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/base-sepolia:
     dependencies:
@@ -208,6 +223,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -226,13 +244,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/bsc-mainnet:
     dependencies:
@@ -242,6 +260,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -260,13 +281,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/bsc-testnet:
     dependencies:
@@ -276,6 +297,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -294,13 +318,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/ethereum-mainnet:
     dependencies:
@@ -310,6 +334,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -331,13 +358,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/ethereum-sepolia:
     dependencies:
@@ -347,6 +374,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -365,13 +395,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/linea-mainnet:
     dependencies:
@@ -381,6 +411,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -399,13 +432,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/linea-sepolia:
     dependencies:
@@ -415,6 +448,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -433,13 +469,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/monad-testnet:
     dependencies:
@@ -449,6 +485,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -467,13 +506,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/moonbase-alpha-testnet:
     dependencies:
@@ -483,6 +522,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -501,13 +543,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/moonbeam-mainnet:
     dependencies:
@@ -517,6 +559,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -535,13 +580,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/moonriver-mainnet:
     dependencies:
@@ -551,6 +596,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -569,13 +617,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/optimism-mainnet:
     dependencies:
@@ -585,6 +633,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -603,13 +654,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/optimism-sepolia:
     dependencies:
@@ -619,6 +670,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -637,13 +691,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/polkadot-hub:
     dependencies:
@@ -653,6 +707,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -671,13 +728,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/polkadot-hub-testnet:
     dependencies:
@@ -687,6 +744,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -705,13 +765,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/polygon-amoy:
     dependencies:
@@ -721,6 +781,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -739,13 +802,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/polygon-mainnet:
     dependencies:
@@ -755,6 +818,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -773,13 +839,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/polygon-zkevm-cardona:
     dependencies:
@@ -789,6 +855,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -807,13 +876,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/polygon-zkevm-mainnet:
     dependencies:
@@ -823,6 +892,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -841,13 +913,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/scroll-mainnet:
     dependencies:
@@ -857,6 +929,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -875,13 +950,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/scroll-sepolia:
     dependencies:
@@ -891,6 +966,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -909,13 +987,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/zksync-era-mainnet:
     dependencies:
@@ -925,6 +1003,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -943,13 +1024,13 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/evm/zksync-era-sepolia:
     dependencies:
@@ -959,6 +1040,9 @@ importers:
       "@oz-indexers/evm-handlers":
         specifier: workspace:*
         version: link:../../../packages/evm-handlers
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@subql/common":
         specifier: latest
         version: 5.8.2
@@ -977,19 +1061,22 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/stellar/mainnet:
     dependencies:
       "@oz-indexers/common":
         specifier: workspace:*
         version: link:../../../packages/common
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@oz-indexers/stellar-handlers":
         specifier: workspace:*
         version: link:../../../packages/stellar-handlers
@@ -1014,7 +1101,7 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       "@subql/testing":
         specifier: latest
         version: 2.3.1
@@ -1023,13 +1110,16 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   networks/stellar/testnet:
     dependencies:
       "@oz-indexers/common":
         specifier: workspace:*
         version: link:../../../packages/common
+      "@oz-indexers/network-config":
+        specifier: workspace:*
+        version: link:../../../packages/network-config
       "@oz-indexers/stellar-handlers":
         specifier: workspace:*
         version: link:../../../packages/stellar-handlers
@@ -1054,7 +1144,7 @@ importers:
     devDependencies:
       "@subql/cli":
         specifier: latest
-        version: 6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
+        version: 6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))
       "@subql/testing":
         specifier: latest
         version: 2.3.1
@@ -1063,7 +1153,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
+        version: 2.1.9(@types/node@22.19.8)(terser@5.46.0)
 
   packages/client:
     dependencies:
@@ -8859,7 +8949,7 @@ snapshots:
 
   "@streamparser/json@0.0.22": {}
 
-  "@subql/cli@6.6.2(@types/node@20.19.31)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))":
+  "@subql/cli@6.6.2(@types/node@22.19.8)(encoding@0.1.13)(ethers@5.8.0)(ipfs-http-client@53.0.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13)))":
     dependencies:
       "@apollo/client": 3.14.0(graphql@16.12.0)
       "@inquirer/prompts": 5.5.0
@@ -8889,7 +8979,7 @@ snapshots:
       siwe: 3.0.0(ethers@5.8.0)
       terser-webpack-plugin: 5.3.16(webpack@5.105.0)
       ts-loader: 9.5.4(typescript@5.9.3)(webpack@5.105.0)
-      ts-node: 10.9.2(@types/node@20.19.31)(typescript@5.9.3)
+      ts-node: 10.9.2(@types/node@22.19.8)(typescript@5.9.3)
       tsconfig-paths-webpack-plugin: 4.2.0
       tslib: 2.8.1
       typescript: 5.9.3
@@ -9182,14 +9272,6 @@ snapshots:
       "@vitest/utils": 2.1.9
       chai: 5.3.3
       tinyrainbow: 1.2.0
-
-  "@vitest/mocker@2.1.9(vite@5.4.21(@types/node@20.19.31)(terser@5.46.0))":
-    dependencies:
-      "@vitest/spy": 2.1.9
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      vite: 5.4.21(@types/node@20.19.31)(terser@5.46.0)
 
   "@vitest/mocker@2.1.9(vite@5.4.21(@types/node@22.19.8)(terser@5.46.0))":
     dependencies:
@@ -10036,10 +10118,6 @@ snapshots:
   crypto-js@4.2.0: {}
 
   crypto-random-string@2.0.0: {}
-
-  debug@4.4.3:
-    dependencies:
-      ms: 2.1.3
 
   debug@4.4.3(supports-color@8.1.1):
     dependencies:
@@ -10975,7 +11053,7 @@ snapshots:
     dependencies:
       chalk: 5.6.2
       commander: 13.1.0
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@8.1.1)
       execa: 8.0.1
       lilconfig: 3.1.3
       listr2: 8.3.3
@@ -11887,14 +11965,14 @@ snapshots:
       typescript: 5.9.3
       webpack: 5.105.0
 
-  ts-node@10.9.2(@types/node@20.19.31)(typescript@5.9.3):
+  ts-node@10.9.2(@types/node@22.19.8)(typescript@5.9.3):
     dependencies:
       "@cspotcode/source-map-support": 0.8.1
       "@tsconfig/node10": 1.0.12
       "@tsconfig/node12": 1.0.11
       "@tsconfig/node14": 1.0.3
       "@tsconfig/node16": 1.0.4
-      "@types/node": 20.19.31
+      "@types/node": 22.19.8
       acorn: 8.15.0
       acorn-walk: 8.3.4
       arg: 4.1.3
@@ -12064,24 +12142,6 @@ snapshots:
       - utf-8-validate
       - zod
 
-  vite-node@2.1.9(@types/node@20.19.31)(terser@5.46.0):
-    dependencies:
-      cac: 6.7.14
-      debug: 4.4.3(supports-color@8.1.1)
-      es-module-lexer: 1.7.0
-      pathe: 1.1.2
-      vite: 5.4.21(@types/node@20.19.31)(terser@5.46.0)
-    transitivePeerDependencies:
-      - "@types/node"
-      - less
-      - lightningcss
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
   vite-node@2.1.9(@types/node@22.19.8)(terser@5.46.0):
     dependencies:
       cac: 6.7.14
@@ -12100,16 +12160,6 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.4.21(@types/node@20.19.31)(terser@5.46.0):
-    dependencies:
-      esbuild: 0.21.5
-      postcss: 8.5.6
-      rollup: 4.57.1
-    optionalDependencies:
-      "@types/node": 20.19.31
-      fsevents: 2.3.3
-      terser: 5.46.0
-
   vite@5.4.21(@types/node@22.19.8)(terser@5.46.0):
     dependencies:
       esbuild: 0.21.5
@@ -12119,41 +12169,6 @@ snapshots:
       "@types/node": 22.19.8
       fsevents: 2.3.3
       terser: 5.46.0
-
-  vitest@2.1.9(@types/node@20.19.31)(terser@5.46.0):
-    dependencies:
-      "@vitest/expect": 2.1.9
-      "@vitest/mocker": 2.1.9(vite@5.4.21(@types/node@20.19.31)(terser@5.46.0))
-      "@vitest/pretty-format": 2.1.9
-      "@vitest/runner": 2.1.9
-      "@vitest/snapshot": 2.1.9
-      "@vitest/spy": 2.1.9
-      "@vitest/utils": 2.1.9
-      chai: 5.3.3
-      debug: 4.4.3(supports-color@8.1.1)
-      expect-type: 1.3.0
-      magic-string: 0.30.21
-      pathe: 1.1.2
-      std-env: 3.10.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.2
-      tinypool: 1.1.1
-      tinyrainbow: 1.2.0
-      vite: 5.4.21(@types/node@20.19.31)(terser@5.46.0)
-      vite-node: 2.1.9(@types/node@20.19.31)(terser@5.46.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      "@types/node": 20.19.31
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
 
   vitest@2.1.9(@types/node@22.19.8)(terser@5.46.0):
     dependencies:
