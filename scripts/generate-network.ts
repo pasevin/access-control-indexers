@@ -11,8 +11,8 @@
  * This creates a new network using shared handlers from @oz-indexers/evm-handlers.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
 const args = process.argv.slice(2);
 
@@ -38,11 +38,11 @@ const chainId = parseInt(chainIdStr, 10);
 const startBlock = startBlockStr ? parseInt(startBlockStr, 10) : 1;
 
 if (isNaN(chainId)) {
-  console.error('Error: chain-id must be a number');
+  console.error("Error: chain-id must be a number");
   process.exit(1);
 }
 
-const baseDir = path.join(__dirname, '..', 'networks', 'evm');
+const baseDir = path.join(__dirname, "..", "networks", "evm");
 const networkDir = path.join(baseDir, networkId);
 
 if (fs.existsSync(networkDir)) {
@@ -53,51 +53,54 @@ if (fs.existsSync(networkDir)) {
 console.log(`\n🔨 Generating network: ${networkId}\n`);
 
 // Create directory structure
-const srcDir = path.join(networkDir, 'src');
+const srcDir = path.join(networkDir, "src");
 fs.mkdirSync(srcDir, { recursive: true });
 
 // Generate package.json
 const packageJson = {
   name: `@oz-indexers/${networkId}`,
-  version: '1.0.0',
+  version: "1.0.0",
   description: `OpenZeppelin Access Control indexer for ${name}`,
-  main: 'dist/index.js',
+  main: "dist/index.js",
   scripts: {
-    build: 'subql build',
-    codegen: 'subql codegen',
-    'start:docker': 'docker compose pull && docker compose up --remove-orphans',
-    dev: 'subql codegen && subql build',
-    test: 'vitest run',
-    clean: 'rm -rf dist .data',
+    build: "subql build",
+    codegen: "subql codegen",
+    "start:docker": "docker compose pull && docker compose up --remove-orphans",
+    dev: "subql codegen && subql build",
+    test: "vitest run",
+    clean: "rm -rf dist .data",
   },
   repository: {
-    type: 'git',
-    url: 'https://github.com/OpenZeppelin/access-control-indexers.git',
+    type: "git",
+    url: "https://github.com/OpenZeppelin/access-control-indexers.git",
     directory: `networks/evm/${networkId}`,
   },
-  author: 'OpenZeppelin',
-  license: 'MIT',
+  author: "OpenZeppelin",
+  license: "MIT",
   dependencies: {
-    '@oz-indexers/common': 'workspace:*',
-    '@oz-indexers/evm-handlers': 'workspace:*',
-    '@subql/common': 'latest',
-    '@subql/common-ethereum': 'latest',
-    '@subql/types-core': 'latest',
-    '@subql/types-ethereum': 'latest',
-    tslib: '^2.6.0',
+    "@oz-indexers/common": "workspace:*",
+    "@oz-indexers/evm-handlers": "workspace:*",
+    "@subql/common": "latest",
+    "@subql/common-ethereum": "latest",
+    "@subql/types-core": "latest",
+    "@subql/types-ethereum": "latest",
+    tslib: "^2.6.0",
   },
   devDependencies: {
-    '@subql/cli': 'latest',
-    typescript: '^5.0.0',
-    vitest: '^2.0.0',
+    "@subql/cli": "latest",
+    typescript: "^5.0.0",
+    vitest: "^2.0.0",
   },
 };
 
 fs.writeFileSync(
-  path.join(networkDir, 'package.json'),
+  path.join(networkDir, "package.json"),
   JSON.stringify(packageJson, null, 2)
 );
-console.log('  ✓ package.json');
+console.log("  ✓ package.json");
+
+// Derive environment variable name for RPC URL from networkId
+const envVarName = networkId.toUpperCase().replace(/-/g, "_") + "_RPC_URL";
 
 // Generate project.ts
 const projectTs = `import {
@@ -136,7 +139,7 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '${chainId}',
-    endpoint: ['${rpcUrl}'],
+    endpoint: [process.env.${envVarName} || '${rpcUrl}'],
   },
   dataSources: [
     // AccessControl events
@@ -254,8 +257,8 @@ const project: EthereumProject = {
 export default project;
 `;
 
-fs.writeFileSync(path.join(networkDir, 'project.ts'), projectTs);
-console.log('  ✓ project.ts');
+fs.writeFileSync(path.join(networkDir, "project.ts"), projectTs);
+console.log("  ✓ project.ts");
 
 // Generate tsconfig.json
 const tsconfig = {
@@ -266,25 +269,25 @@ const tsconfig = {
     declaration: true,
     importHelpers: true,
     resolveJsonModule: true,
-    module: 'commonjs',
-    outDir: 'dist',
-    rootDir: 'src',
-    target: 'es2021',
+    module: "commonjs",
+    outDir: "dist",
+    rootDir: "src",
+    target: "es2021",
     strict: true,
   },
   include: [
-    'src/**/*',
-    'node_modules/@subql/types-core/dist/global.d.ts',
-    'node_modules/@subql/types-ethereum/dist/global.d.ts',
+    "src/**/*",
+    "node_modules/@subql/types-core/dist/global.d.ts",
+    "node_modules/@subql/types-ethereum/dist/global.d.ts",
   ],
-  exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+  exclude: ["src/**/*.test.ts", "src/**/*.spec.ts"],
 };
 
 fs.writeFileSync(
-  path.join(networkDir, 'tsconfig.json'),
+  path.join(networkDir, "tsconfig.json"),
   JSON.stringify(tsconfig, null, 2)
 );
-console.log('  ✓ tsconfig.json');
+console.log("  ✓ tsconfig.json");
 
 // Generate docker-compose.yml
 const dockerCompose = `version: "3"
@@ -297,9 +300,11 @@ services:
     volumes:
       - .data/postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: \${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: \${POSTGRES_USER:-postgres}
+      POSTGRES_DB: \${POSTGRES_DB:-postgres}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U \${POSTGRES_USER:-postgres}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -311,24 +316,27 @@ services:
         condition: service_healthy
     restart: unless-stopped
     environment:
-      DB_USER: postgres
-      DB_PASS: postgres
-      DB_DATABASE: postgres
+      DB_USER: \${POSTGRES_USER:-postgres}
+      DB_PASS: \${POSTGRES_PASSWORD:-postgres}
+      DB_DATABASE: \${POSTGRES_DB:-postgres}
       DB_HOST: postgres
       DB_PORT: 5432
     volumes:
       - ./:/app
-      - ../../../packages/schema:/app/packages/schema:ro
-      - ../../../packages/evm-handlers/abis:/app/packages/evm-handlers/abis:ro
+      - ../../../packages/schema:/packages/schema:ro
+      - ../../../packages/evm-handlers/abis:/packages/evm-handlers/abis:ro
     command:
       - -f=/app
       - --db-schema=app
+      # Disable historical state tracking for better indexing performance.
+      # Remove this flag if you need to query historical entity snapshots.
       - --disable-historical
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/ready"]
-      interval: 3s
-      timeout: 5s
-      retries: 10
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/ready"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
 
   graphql-engine:
     image: subquerynetwork/subql-query:latest
@@ -339,9 +347,9 @@ services:
         condition: service_healthy
     restart: unless-stopped
     environment:
-      DB_USER: postgres
-      DB_PASS: postgres
-      DB_DATABASE: postgres
+      DB_USER: \${POSTGRES_USER:-postgres}
+      DB_PASS: \${POSTGRES_PASSWORD:-postgres}
+      DB_DATABASE: \${POSTGRES_DB:-postgres}
       DB_HOST: postgres
       DB_PORT: 5432
     command:
@@ -349,14 +357,14 @@ services:
       - --playground
 `;
 
-fs.writeFileSync(path.join(networkDir, 'docker-compose.yml'), dockerCompose);
-console.log('  ✓ docker-compose.yml');
+fs.writeFileSync(path.join(networkDir, "docker-compose.yml"), dockerCompose);
+console.log("  ✓ docker-compose.yml");
 
 // Generate src/index.ts using shared handlers
 const displayName = networkId
-  .split('-')
+  .split("-")
   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-  .join(' ');
+  .join(" ");
 
 const indexTs = `/**
  * ${displayName} Access Control Indexer
@@ -409,8 +417,8 @@ export {
 };
 `;
 
-fs.writeFileSync(path.join(srcDir, 'index.ts'), indexTs);
-console.log('  ✓ src/index.ts (using shared handlers)');
+fs.writeFileSync(path.join(srcDir, "index.ts"), indexTs);
+console.log("  ✓ src/index.ts (using shared handlers)");
 
 console.log(`
 ✅ Generated network: ${networkId}

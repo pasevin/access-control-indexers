@@ -1,2 +1,5 @@
 # Validate all networks reference the shared schema correctly
 pnpm run sync:schema
+
+# Run lint-staged on staged files
+npx lint-staged

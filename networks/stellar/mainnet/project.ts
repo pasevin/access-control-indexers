@@ -2,107 +2,112 @@ import {
   StellarDatasourceKind,
   StellarHandlerKind,
   StellarProject,
-} from '@subql/types-stellar';
+} from "@subql/types-stellar";
 
 /**
  * Stellar Mainnet Project Configuration
  * OpenZeppelin Access Control Indexer
  */
 const project: StellarProject = {
-  specVersion: '1.0.0',
-  name: 'oz-access-control-stellar-mainnet',
-  version: '1.0.0',
+  specVersion: "1.0.0",
+  name: "oz-access-control-stellar-mainnet",
+  version: "1.0.0",
   runner: {
     node: {
-      name: '@subql/node-stellar',
-      version: '*',
+      name: "@subql/node-stellar",
+      version: "*",
     },
     query: {
-      name: '@subql/query',
-      version: '*',
+      name: "@subql/query",
+      version: "*",
     },
   },
   description:
-    'OpenZeppelin Access Control and Ownable indexer for Stellar Mainnet',
-  repository: 'https://github.com/OpenZeppelin/access-control-indexers',
+    "OpenZeppelin Access Control and Ownable indexer for Stellar Mainnet",
+  repository: "https://github.com/OpenZeppelin/access-control-indexers",
   schema: {
-    file: '../../../packages/schema/schema.graphql',
+    file: "../../../packages/schema/schema.graphql",
   },
   network: {
-    chainId: 'Public Global Stellar Network ; September 2015',
-    endpoint: [process.env.STELLAR_MAINNET_HORIZON_URL || 'https://horizon.stellar.org'],
-    sorobanEndpoint: process.env.STELLAR_MAINNET_SOROBAN_URL || 'https://soroban-rpc.mainnet.stellar.gateway.fm',
+    chainId: "Public Global Stellar Network ; September 2015",
+    endpoint: [
+      process.env.STELLAR_MAINNET_HORIZON_URL || "https://horizon.stellar.org",
+    ],
+    sorobanEndpoint:
+      process.env.STELLAR_MAINNET_SOROBAN_URL ||
+      "https://soroban-rpc.mainnet.stellar.gateway.fm",
   },
+  // Start block 60377000: OZ Stellar AccessControl contracts launch on mainnet
   dataSources: [
     {
       kind: StellarDatasourceKind.Runtime,
       startBlock: 60377000,
       mapping: {
-        file: './dist/index.js',
+        file: "./dist/index.js",
         handlers: [
           // Access Control Events
           {
-            handler: 'handleRoleGranted',
+            handler: "handleRoleGranted",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['role_granted'],
+              topics: ["role_granted"],
             },
           },
           {
-            handler: 'handleRoleRevoked',
+            handler: "handleRoleRevoked",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['role_revoked'],
+              topics: ["role_revoked"],
             },
           },
           {
-            handler: 'handleAdminTransferInitiated',
+            handler: "handleAdminTransferInitiated",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['admin_transfer_initiated'],
+              topics: ["admin_transfer_initiated"],
             },
           },
           {
-            handler: 'handleAdminTransferCompleted',
+            handler: "handleAdminTransferCompleted",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['admin_transfer_completed'],
+              topics: ["admin_transfer_completed"],
             },
           },
           {
-            handler: 'handleAdminRenounced',
+            handler: "handleAdminRenounced",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['admin_renounced'],
+              topics: ["admin_renounced"],
             },
           },
           {
-            handler: 'handleRoleAdminChanged',
+            handler: "handleRoleAdminChanged",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['role_admin_changed'],
+              topics: ["role_admin_changed"],
             },
           },
           // Ownable Events
           {
-            handler: 'handleOwnershipTransferStarted',
+            handler: "handleOwnershipTransferStarted",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['ownership_transfer'],
+              topics: ["ownership_transfer"],
             },
           },
           {
-            handler: 'handleOwnershipTransferCompleted',
+            handler: "handleOwnershipTransferCompleted",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['ownership_transfer_completed'],
+              topics: ["ownership_transfer_completed"],
             },
           },
           {
-            handler: 'handleOwnershipRenounced',
+            handler: "handleOwnershipRenounced",
             kind: StellarHandlerKind.Event,
             filter: {
-              topics: ['ownership_renounced'],
+              topics: ["ownership_renounced"],
             },
           },
         ],
