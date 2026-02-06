@@ -43,12 +43,14 @@ jobs:
       - name: Determine network type
         id: network-type
         run: |
-          if [[ "${{ inputs.network }}" == stellar-* ]]; then
+          NETWORK="${{ inputs.network }}"
+          if [[ "$NETWORK" == stellar-* ]]; then
             echo "type=stellar" >> $GITHUB_OUTPUT
-            echo "path=networks/stellar/${${{ inputs.network }}#stellar-}" >> $GITHUB_OUTPUT
+            SUFFIX="${NETWORK#stellar-}"
+            echo "path=networks/stellar/${SUFFIX}" >> $GITHUB_OUTPUT
           else
             echo "type=evm" >> $GITHUB_OUTPUT
-            echo "path=networks/evm/${{ inputs.network }}" >> $GITHUB_OUTPUT
+            echo "path=networks/evm/${NETWORK}" >> $GITHUB_OUTPUT
           fi
 
       - name: Build indexer

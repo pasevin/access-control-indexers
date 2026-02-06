@@ -1,5 +1,40 @@
 /**
  * Stellar Testnet Access Control Indexer
- * Exports all handler functions
+ * Network ID: stellar-testnet
  */
-export * from './mappings/mappingHandlers';
+import {
+  initializeHandlers,
+  handleRoleGranted,
+  handleRoleRevoked,
+  handleRoleAdminChanged,
+  handleAdminTransferInitiated,
+  handleAdminTransferCompleted,
+  handleAdminRenounced,
+  handleOwnershipTransferStarted,
+  handleOwnershipTransferCompleted,
+  handleOwnershipRenounced,
+} from '@oz-indexers/stellar-handlers';
+import {
+  AccessControlEvent,
+  RoleMembership,
+  ContractOwnership,
+  Contract,
+} from './types';
+
+initializeHandlers({
+  networkId: 'stellar-testnet',
+  entities: { AccessControlEvent, RoleMembership, ContractOwnership, Contract },
+  store,
+});
+
+export {
+  handleRoleGranted,
+  handleRoleRevoked,
+  handleRoleAdminChanged,
+  handleAdminTransferInitiated,
+  handleAdminTransferCompleted,
+  handleAdminRenounced,
+  handleOwnershipTransferStarted,
+  handleOwnershipTransferCompleted,
+  handleOwnershipRenounced,
+};

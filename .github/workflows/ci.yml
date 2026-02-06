@@ -44,6 +44,10 @@ jobs:
         include:
           - network: ethereum-mainnet
             type: evm
+          - network: arbitrum-mainnet
+            type: evm
+          - network: base-mainnet
+            type: evm
           - network: stellar-testnet
             type: stellar
           - network: stellar-mainnet
@@ -93,4 +97,4 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm lint || true # Don't fail on lint errors initially
+        run: pnpm lint

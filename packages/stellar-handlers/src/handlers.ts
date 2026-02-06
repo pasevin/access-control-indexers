@@ -1,91 +1,14 @@
 /**
  * Stellar Access Control Mapping Handlers
- * Adapted for unified superset schema
+ *
+ * Shared handler implementations for Stellar AccessControl and Ownable events.
+ * Uses the context module for network-specific configuration instead of
+ * hardcoded constants.
  */
 
-// Polyfills for Stellar SDK
-if (typeof TextEncoder === 'undefined') {
-  (globalThis as any).TextEncoder = class TextEncoder {
-    encode(input: string): Uint8Array {
-      const bytes: number[] = [];
-      for (let i = 0; i < input.length; i++) {
-        let c = input.charCodeAt(i);
-        if (c < 0x80) {
-          bytes.push(c);
-        } else if (c < 0x800) {
-          bytes.push(0xc0 | (c >> 6), 0x80 | (c & 0x3f));
-        } else if (c < 0xd800 || c >= 0xe000) {
-          bytes.push(
-            0xe0 | (c >> 12),
-            0x80 | ((c >> 6) & 0x3f),
-            0x80 | (c & 0x3f)
-          );
-        } else {
-          i++;
-          c = 0x10000 + (((c & 0x3ff) << 10) | (input.charCodeAt(i) & 0x3ff));
-          bytes.push(
-            0xf0 | (c >> 18),
-            0x80 | ((c >> 12) & 0x3f),
-            0x80 | ((c >> 6) & 0x3f),
-            0x80 | (c & 0x3f)
-          );
-        }
-      }
-      return new Uint8Array(bytes);
-    }
-  };
-}
-
-if (typeof TextDecoder === 'undefined') {
-  (globalThis as any).TextDecoder = class TextDecoder {
-    decode(input: Uint8Array): string {
-      let result = '';
-      let i = 0;
-      while (i < input.length) {
-        const c = input[i];
-        if (c < 0x80) {
-          result += String.fromCharCode(c);
-          i++;
-        } else if ((c & 0xe0) === 0xc0) {
-          result += String.fromCharCode(
-            ((c & 0x1f) << 6) | (input[i + 1] & 0x3f)
-          );
-          i += 2;
-        } else if ((c & 0xf0) === 0xe0) {
-          result += String.fromCharCode(
-            ((c & 0x0f) << 12) |
-              ((input[i + 1] & 0x3f) << 6) |
-              (input[i + 2] & 0x3f)
-          );
-          i += 3;
-        } else {
-          const codePoint =
-            ((c & 0x07) << 18) |
-            ((input[i + 1] & 0x3f) << 12) |
-            ((input[i + 2] & 0x3f) << 6) |
-            (input[i + 3] & 0x3f);
-          const adjusted = codePoint - 0x10000;
-          result += String.fromCharCode(
-            0xd800 + (adjusted >> 10),
-            0xdc00 + (adjusted & 0x3ff)
-          );
-          i += 4;
-        }
-      }
-      return result;
-    }
-  };
-}
-
-import {
-  AccessControlEvent,
-  RoleMembership,
-  ContractOwnership,
-  Contract,
-  EventType,
-  ContractType,
-} from '../types';
-import { SorobanEvent } from '@subql/types-stellar';
+import type { SorobanEvent } from '@subql/types-stellar';
+import { EventType, ContractType } from '@oz-indexers/common';
+import { getContext } from './context';
 import {
   isValidStellarAddress,
   isValidRoleSymbol,
@@ -94,8 +17,9 @@ import {
   hasValidLedgerInfo,
 } from './validation';
 
-// Network identifier for this indexer
-const NETWORK_ID = 'stellar-mainnet';
+// ============================================================================
+// ID Generation Helpers
+// ============================================================================
 
 /**
  * Helper to generate event ID
@@ -108,19 +32,24 @@ function generateEventId(eventId: string, suffix: string): string {
  * Helper to generate role membership ID
  */
 function generateRoleMembershipId(
+  networkId: string,
   contract: string,
   role: string,
   account: string
 ): string {
-  return `${NETWORK_ID}-${contract}-${role}-${account}`;
+  return `${networkId}-${contract}-${role}-${account}`;
 }
 
 /**
  * Helper to generate contract ID
  */
-function generateContractId(contract: string): string {
-  return `${NETWORK_ID}-${contract}`;
+function generateContractId(networkId: string, contract: string): string {
+  return `${networkId}-${contract}`;
 }
+
+// ============================================================================
+// Contract Metadata
+// ============================================================================
 
 /**
  * Update or create contract metadata
@@ -130,13 +59,18 @@ async function updateContractMetadata(
   type: ContractType,
   lastActivity: Date
 ): Promise<void> {
-  const contractId = generateContractId(contractAddress);
+  const {
+    networkId,
+    entities: { Contract },
+  } = getContext();
+
+  const contractId = generateContractId(networkId, contractAddress);
   let contract = await Contract.get(contractId);
 
   if (!contract) {
     contract = Contract.create({
       id: contractId,
-      network: NETWORK_ID,
+      network: networkId,
       address: contractAddress,
       type: type,
       firstSeenAt: lastActivity,
@@ -155,12 +89,21 @@ async function updateContractMetadata(
   await contract.save();
 }
 
+// ============================================================================
+// AccessControl Handlers
+// ============================================================================
+
 /**
  * Handler for RoleGranted events
  */
 export async function handleRoleGranted(event: SorobanEvent): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 3) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent, RoleMembership },
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -190,28 +133,33 @@ export async function handleRoleGranted(event: SorobanEvent): Promise<void> {
   // Create event with superset schema
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'granted'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.ROLE_GRANTED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
     role,
     account,
     sender,
   });
 
   // Create role membership with network prefix
-  const membershipId = generateRoleMembershipId(contractAddress, role, account);
+  const membershipId = generateRoleMembershipId(
+    networkId,
+    contractAddress,
+    role,
+    account
+  );
   const membership = RoleMembership.create({
     id: membershipId,
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     role,
     account,
     grantedAt: timestamp,
     grantedBy: sender,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
   });
 
   await updateContractMetadata(
@@ -228,6 +176,12 @@ export async function handleRoleGranted(event: SorobanEvent): Promise<void> {
 export async function handleRoleRevoked(event: SorobanEvent): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 3) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent },
+    store,
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -256,18 +210,24 @@ export async function handleRoleRevoked(event: SorobanEvent): Promise<void> {
 
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'revoked'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.ROLE_REVOKED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
     role,
     account,
     sender,
   });
 
-  const membershipId = generateRoleMembershipId(contractAddress, role, account);
+  // Fix 2: Use store.remove consistently (NOT entity.remove)
+  const membershipId = generateRoleMembershipId(
+    networkId,
+    contractAddress,
+    role,
+    account
+  );
   await store.remove('RoleMembership', membershipId);
   await updateContractMetadata(
     contractAddress,
@@ -285,6 +245,11 @@ export async function handleRoleAdminChanged(
 ): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 2) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent },
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -304,19 +269,20 @@ export async function handleRoleAdminChanged(
   const previousAdminRole = eventData.previous_admin_role as string;
   const newAdminRole = eventData.new_admin_role as string;
 
-  if (typeof previousAdminRole !== 'string' || !isValidRoleSymbol(newAdminRole))
+  // Fix 6: Symmetric validation — validate both roles with isValidRoleSymbol
+  if (!isValidRoleSymbol(previousAdminRole) || !isValidRoleSymbol(newAdminRole))
     return;
 
   const timestamp = new Date(event.ledgerClosedAt);
 
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'role-admin-changed'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.ROLE_ADMIN_CHANGED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
     role,
     previousAdminRole,
     newAdminRole,
@@ -330,6 +296,10 @@ export async function handleRoleAdminChanged(
   await accessEvent.save();
 }
 
+// ============================================================================
+// Admin Transfer Handlers (Stellar-specific)
+// ============================================================================
+
 /**
  * Handler for AdminTransferInitiated events (Stellar-specific)
  */
@@ -338,6 +308,11 @@ export async function handleAdminTransferInitiated(
 ): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 2) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent, ContractOwnership },
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -364,18 +339,42 @@ export async function handleAdminTransferInitiated(
 
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'admin-init'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.ADMIN_TRANSFER_INITIATED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
     previousAdmin: currentAdmin,
     newAdmin,
     liveUntilLedger,
   });
 
-  await accessEvent.save();
+  // Fix 5: Track pending admin transfer in ContractOwnership
+  const ownershipId = generateContractId(networkId, contractAddress);
+  let ownership = await ContractOwnership.get(ownershipId);
+  if (!ownership) {
+    ownership = ContractOwnership.create({
+      id: ownershipId,
+      network: networkId,
+      contract: contractAddress,
+      owner: currentAdmin,
+      pendingOwner: newAdmin,
+      pendingUntilLedger: liveUntilLedger as number,
+      transferredAt: timestamp,
+      txHash: event.transaction?.hash || '',
+    });
+  } else {
+    ownership.pendingOwner = newAdmin;
+    ownership.pendingUntilLedger = liveUntilLedger as number;
+  }
+
+  await updateContractMetadata(
+    contractAddress,
+    ContractType.ACCESS_CONTROL,
+    timestamp
+  );
+  await Promise.all([accessEvent.save(), ownership.save()]);
 }
 
 /**
@@ -386,6 +385,11 @@ export async function handleAdminTransferCompleted(
 ): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 2) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent, ContractOwnership },
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -408,30 +412,59 @@ export async function handleAdminTransferCompleted(
 
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'admin-complete'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.ADMIN_TRANSFER_COMPLETED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
     previousAdmin,
     newAdmin,
   });
+
+  // Update ContractOwnership to reflect completed admin transfer
+  const ownershipId = generateContractId(networkId, contractAddress);
+  let ownership = await ContractOwnership.get(ownershipId);
+  if (!ownership) {
+    ownership = ContractOwnership.create({
+      id: ownershipId,
+      network: networkId,
+      contract: contractAddress,
+      owner: newAdmin,
+      previousOwner: previousAdmin,
+      transferredAt: timestamp,
+      txHash: event.transaction?.hash || '',
+    });
+  } else {
+    ownership.previousOwner = ownership.owner;
+    ownership.owner = newAdmin;
+    ownership.pendingOwner = undefined;
+    ownership.pendingUntilLedger = undefined;
+    ownership.transferredAt = timestamp;
+    ownership.txHash = event.transaction?.hash || '';
+  }
 
   await updateContractMetadata(
     contractAddress,
     ContractType.ACCESS_CONTROL,
     timestamp
   );
-  await accessEvent.save();
+  await Promise.all([accessEvent.save(), ownership.save()]);
 }
 
 /**
  * Handler for AdminRenounced events (Stellar-specific)
  */
-export async function handleAdminRenounced(event: SorobanEvent): Promise<void> {
+export async function handleAdminRenounced(
+  event: SorobanEvent
+): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 2) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent },
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -443,12 +476,12 @@ export async function handleAdminRenounced(event: SorobanEvent): Promise<void> {
 
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'admin-renounced'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.ADMIN_RENOUNCED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
     previousAdmin: admin,
   });
 
@@ -460,6 +493,10 @@ export async function handleAdminRenounced(event: SorobanEvent): Promise<void> {
   await accessEvent.save();
 }
 
+// ============================================================================
+// Ownership Handlers
+// ============================================================================
+
 /**
  * Handler for OwnershipTransferStarted events
  */
@@ -468,6 +505,11 @@ export async function handleOwnershipTransferStarted(
 ): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 1) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent, ContractOwnership },
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -497,18 +539,42 @@ export async function handleOwnershipTransferStarted(
 
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'ownership-start'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.OWNERSHIP_TRANSFER_STARTED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
     previousOwner: oldOwner,
     newOwner,
     liveUntilLedger,
   });
 
-  await accessEvent.save();
+  // Fix 4: Update ContractOwnership with pendingOwner
+  const ownershipId = generateContractId(networkId, contractAddress);
+  let ownership = await ContractOwnership.get(ownershipId);
+  if (!ownership) {
+    ownership = ContractOwnership.create({
+      id: ownershipId,
+      network: networkId,
+      contract: contractAddress,
+      owner: oldOwner,
+      pendingOwner: newOwner,
+      pendingUntilLedger: liveUntilLedger as number,
+      transferredAt: timestamp,
+      txHash: event.transaction?.hash || '',
+    });
+  } else {
+    ownership.pendingOwner = newOwner;
+    ownership.pendingUntilLedger = liveUntilLedger as number;
+  }
+
+  await updateContractMetadata(
+    contractAddress,
+    ContractType.OWNABLE,
+    timestamp
+  );
+  await Promise.all([accessEvent.save(), ownership.save()]);
 }
 
 /**
@@ -519,6 +585,11 @@ export async function handleOwnershipTransferCompleted(
 ): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 1) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent, ContractOwnership },
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -536,26 +607,42 @@ export async function handleOwnershipTransferCompleted(
 
   const timestamp = new Date(event.ledgerClosedAt);
 
+  // Fix 8: Look up existing ownership to populate previousOwner
+  const ownershipId = generateContractId(networkId, contractAddress);
+  const existingOwnership = await ContractOwnership.get(ownershipId);
+  const previousOwner = existingOwnership?.owner;
+
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'ownership'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.OWNERSHIP_TRANSFER_COMPLETED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
+    previousOwner,
     newOwner,
   });
 
-  const ownershipId = generateContractId(contractAddress);
-  const ownership = ContractOwnership.create({
-    id: ownershipId,
-    network: NETWORK_ID,
-    contract: contractAddress,
-    owner: newOwner,
-    transferredAt: timestamp,
-    txHash: event.transaction?.hash || 'unknown',
-  });
+  // Fix 3: Get-then-update for ContractOwnership
+  let ownership = existingOwnership;
+  if (!ownership) {
+    ownership = ContractOwnership.create({
+      id: ownershipId,
+      network: networkId,
+      contract: contractAddress,
+      owner: newOwner,
+      transferredAt: timestamp,
+      txHash: event.transaction?.hash || '',
+    });
+  } else {
+    ownership.previousOwner = ownership.owner;
+    ownership.owner = newOwner;
+    ownership.pendingOwner = undefined;
+    ownership.pendingUntilLedger = undefined;
+    ownership.transferredAt = timestamp;
+    ownership.txHash = event.transaction?.hash || '';
+  }
 
   await updateContractMetadata(
     contractAddress,
@@ -573,6 +660,12 @@ export async function handleOwnershipRenounced(
 ): Promise<void> {
   if (!hasValidLedgerInfo(event)) return;
   if (event.topic.length !== 1) return;
+
+  const {
+    networkId,
+    entities: { AccessControlEvent },
+    store,
+  } = getContext();
 
   const contractAddress = getContractAddress(event);
   if (!contractAddress) return;
@@ -592,16 +685,17 @@ export async function handleOwnershipRenounced(
 
   const accessEvent = AccessControlEvent.create({
     id: generateEventId(event.id, 'ownership-renounced'),
-    network: NETWORK_ID,
+    network: networkId,
     contract: contractAddress,
     eventType: EventType.OWNERSHIP_RENOUNCED,
     blockNumber: BigInt(event.ledger.sequence),
     timestamp,
-    txHash: event.transaction?.hash || 'unknown',
+    txHash: event.transaction?.hash || '',
     previousOwner: oldOwner,
   });
 
-  const ownershipId = generateContractId(contractAddress);
+  // Fix 9: Use store.remove consistently
+  const ownershipId = generateContractId(networkId, contractAddress);
   await store.remove('ContractOwnership', ownershipId);
   await updateContractMetadata(
     contractAddress,

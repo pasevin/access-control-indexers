@@ -1,0 +1,36 @@
+{
+  "name": "@oz-indexers/stellar-handlers",
+  "version": "1.0.0",
+  "description": "Shared Stellar mapping handlers for OpenZeppelin Access Control indexers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenZeppelin/access-control-indexers.git",
+    "directory": "packages/stellar-handlers"
+  },
+  "author": "OpenZeppelin",
+  "license": "MIT",
+  "dependencies": {
+    "@oz-indexers/common": "workspace:*"
+  },
+  "peerDependencies": {
+    "@stellar/stellar-base": ">=12.0.0",
+    "@subql/types-stellar": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@stellar/stellar-base": "latest",
+    "@subql/types-stellar": "latest",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
+}

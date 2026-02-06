@@ -51,6 +51,9 @@ export interface AccessControlEventResponse {
   previousAdmin?: string;
   newAdmin?: string;
   liveUntilLedger?: number;
+  acceptSchedule?: string;
+  newDelay?: string;
+  effectSchedule?: string;
 }
 
 /**
@@ -112,4 +115,16 @@ export interface PaginatedResponse<T> {
 export interface IndexerEndpoint {
   network: string;
   url: string;
+}
+
+/**
+ * Retry configuration for client requests
+ */
+export interface RetryConfig {
+  /** Maximum number of retry attempts (default: 3) */
+  maxRetries?: number;
+  /** Base delay in ms between retries (default: 1000) */
+  baseDelayMs?: number;
+  /** Request timeout in ms (default: 30000) */
+  timeoutMs?: number;
 }

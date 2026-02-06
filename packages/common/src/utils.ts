@@ -2,7 +2,7 @@
  * Utility functions for Access Control indexers
  */
 
-import { ContractType, EventType } from './types';
+import { EventType } from './types';
 
 /**
  * Generates a unique event ID
@@ -58,33 +58,6 @@ export function generateContractId(network: string, contract: string): string {
 }
 
 /**
- * Determines contract type based on event types seen
- * @param eventTypes - Set of event types seen from this contract
- * @returns Contract type
- */
-export function determineContractType(
-  eventTypes: Set<EventType>
-): ContractType {
-  const hasAccessControl =
-    eventTypes.has(EventType.ROLE_GRANTED) ||
-    eventTypes.has(EventType.ROLE_REVOKED) ||
-    eventTypes.has(EventType.ROLE_ADMIN_CHANGED);
-
-  const hasOwnable =
-    eventTypes.has(EventType.OWNERSHIP_TRANSFER_COMPLETED) ||
-    eventTypes.has(EventType.OWNERSHIP_TRANSFER_STARTED) ||
-    eventTypes.has(EventType.OWNERSHIP_RENOUNCED);
-
-  if (hasAccessControl && hasOwnable) {
-    return ContractType.ACCESS_CONTROL_OWNABLE;
-  } else if (hasAccessControl) {
-    return ContractType.ACCESS_CONTROL;
-  } else {
-    return ContractType.OWNABLE;
-  }
-}
-
-/**
  * Checks if an event type is a role event
  */
 export function isRoleEvent(eventType: EventType): boolean {
@@ -106,13 +79,3 @@ export function isOwnershipEvent(eventType: EventType): boolean {
   );
 }
 
-/**
- * Checks if an event type is a Stellar-specific admin event
- */
-export function isAdminEvent(eventType: EventType): boolean {
-  return (
-    eventType === EventType.ADMIN_TRANSFER_INITIATED ||
-    eventType === EventType.ADMIN_TRANSFER_COMPLETED ||
-    eventType === EventType.ADMIN_RENOUNCED
-  );
-}

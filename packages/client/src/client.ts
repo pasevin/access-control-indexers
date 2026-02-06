@@ -10,6 +10,7 @@ import {
   ContractResponse,
   PaginatedResponse,
   IndexerEndpoint,
+  RetryConfig,
 } from './types';
 
 /**
@@ -20,6 +21,8 @@ export interface ClientConfig {
   endpoints: Record<string, string>;
   /** Optional fetch function for custom HTTP client */
   fetch?: typeof fetch;
+  /** Optional retry configuration */
+  retry?: RetryConfig;
 }
 
 /**
@@ -46,10 +49,16 @@ export interface ClientConfig {
 export class AccessControlClient {
   private endpoints: Record<string, string>;
   private fetchFn: typeof fetch;
+  private retryConfig: Required<RetryConfig>;
 
   constructor(config: ClientConfig) {
     this.endpoints = config.endpoints;
     this.fetchFn = config.fetch || fetch;
+    this.retryConfig = {
+      maxRetries: config.retry?.maxRetries ?? 3,
+      baseDelayMs: config.retry?.baseDelayMs ?? 1000,
+      timeoutMs: config.retry?.timeoutMs ?? 30000,
+    };
   }
 
   /**
@@ -64,31 +73,63 @@ export class AccessControlClient {
   }
 
   /**
-   * Execute a GraphQL query
+   * Execute a GraphQL query with retry and timeout support
    */
   private async executeQuery<T>(
     endpoint: string,
     query: string,
     variables: Record<string, unknown> = {}
   ): Promise<T> {
-    const response = await this.fetchFn(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query, variables }),
-    });
+    let lastError: Error | undefined;
 
-    if (!response.ok) {
-      throw new Error(`GraphQL request failed: ${response.statusText}`);
+    for (let attempt = 0; attempt <= this.retryConfig.maxRetries; attempt++) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(
+          () => controller.abort(),
+          this.retryConfig.timeoutMs
+        );
+
+        const response = await this.fetchFn(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, variables }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`GraphQL request failed: ${response.statusText}`);
+        }
+
+        const result = (await response.json()) as {
+          data?: T;
+          errors?: unknown[];
+        };
+
+        if (result.errors) {
+          throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+        }
+
+        return result.data as T;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+
+        // Don't retry on GraphQL-level errors (they won't resolve with retries)
+        if (lastError.message.startsWith('GraphQL errors:')) {
+          throw lastError;
+        }
+
+        if (attempt < this.retryConfig.maxRetries) {
+          const delay =
+            this.retryConfig.baseDelayMs * Math.pow(2, attempt);
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
     }
 
-    const result = (await response.json()) as { data?: T; errors?: unknown[] };
-    if (result.errors) {
-      throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
-    }
-
-    return result.data as T;
+    throw lastError || new Error('Request failed after retries');
   }
 
   /**
@@ -101,10 +142,17 @@ export class AccessControlClient {
       filter.network = { equalTo: options.network };
     }
     if (options.contract) {
-      filter.contract = { equalTo: options.contract.toLowerCase() };
+      // Only lowercase EVM addresses (0x prefix); Stellar addresses are case-sensitive
+      const normalizedContract = options.contract.startsWith('0x')
+        ? options.contract.toLowerCase()
+        : options.contract;
+      filter.contract = { equalTo: normalizedContract };
     }
     if (options.account) {
-      filter.account = { equalTo: options.account.toLowerCase() };
+      const normalizedAccount = options.account.startsWith('0x')
+        ? options.account.toLowerCase()
+        : options.account;
+      filter.account = { equalTo: normalizedAccount };
     }
     if (options.role) {
       filter.role = { equalTo: options.role };
@@ -168,6 +216,9 @@ export class AccessControlClient {
             previousAdmin
             newAdmin
             liveUntilLedger
+            acceptSchedule
+            newDelay
+            effectSchedule
           }
           totalCount
           pageInfo {
@@ -200,7 +251,7 @@ export class AccessControlClient {
     const endpoint = this.getEndpoint(network);
     const filter: Record<string, unknown> = {
       network: { equalTo: network },
-      contract: { equalTo: contract.toLowerCase() },
+      contract: { equalTo: contract.startsWith('0x') ? contract.toLowerCase() : contract },
     };
 
     if (role) {
@@ -255,7 +306,8 @@ export class AccessControlClient {
       }
     `;
 
-    const id = `${network}-${contract.toLowerCase()}`;
+    const normalizedContract = contract.startsWith('0x') ? contract.toLowerCase() : contract;
+    const id = `${network}-${normalizedContract}`;
     const result = await this.executeQuery<{
       contractOwnership: ContractOwnershipResponse | null;
     }>(endpoint, query, { id });
@@ -282,7 +334,9 @@ export class AccessControlClient {
       }
     `;
 
-    const id = `${network}-${contract.toLowerCase()}-${role}-${account.toLowerCase()}`;
+    const normalizedContract = contract.startsWith('0x') ? contract.toLowerCase() : contract;
+    const normalizedAccount = account.startsWith('0x') ? account.toLowerCase() : account;
+    const id = `${network}-${normalizedContract}-${role}-${normalizedAccount}`;
     const result = await this.executeQuery<{
       roleMembership: { id: string } | null;
     }>(endpoint, query, { id });
@@ -313,7 +367,8 @@ export class AccessControlClient {
       }
     `;
 
-    const id = `${network}-${contract.toLowerCase()}`;
+    const normalizedContract = contract.startsWith('0x') ? contract.toLowerCase() : contract;
+    const id = `${network}-${normalizedContract}`;
     const result = await this.executeQuery<{
       contract: ContractResponse | null;
     }>(endpoint, query, { id });
