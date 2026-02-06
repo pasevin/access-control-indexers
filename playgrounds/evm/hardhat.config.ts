@@ -7,12 +7,10 @@ export default defineConfig({
     version: '0.8.28',
   },
   networks: {
-    // Add network configs as needed
-    // Example:
-    // sepolia: {
-    //   type: "http",
-    //   url: process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
-    //   accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-    // },
+    sepolia: {
+      type: 'http',
+      url: process.env.SEPOLIA_RPC_URL || 'https://ethereum-sepolia-rpc.publicnode.com',
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
   },
 });

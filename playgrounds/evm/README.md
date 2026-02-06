@@ -11,6 +11,7 @@ Test contracts for OpenZeppelin Access Control indexers on EVM networks.
 - **AccessControlMock**: Standard AccessControl implementation
 - **OwnableMock**: Standard Ownable implementation
 - **Ownable2StepMock**: Two-step ownership transfer
+- **AccessControlDefaultAdminRulesMock**: Two-step default admin transfer with delay
 - **CombinedMock**: Both AccessControl and Ownable2Step
 
 ## Setup
@@ -64,10 +65,22 @@ networks: {
 
 The `generate-events.ts` script creates:
 
+### AccessControl Events
+
 - **RoleGranted**: Multiple role grants to different accounts
 - **RoleRevoked**: Role revocation
 - **RoleAdminChanged**: Changing role admin relationships
+
+### Ownable/Ownable2Step Events
+
 - **OwnershipTransferStarted**: Two-step transfer initiation
 - **OwnershipTransferred**: Ownership completion
 
-This provides comprehensive test data for validating the indexer.
+### AccessControlDefaultAdminRules Events
+
+- **DefaultAdminTransferScheduled**: Two-step default admin transfer scheduled
+- **DefaultAdminTransferCanceled**: Default admin transfer canceled
+- **DefaultAdminDelayChangeScheduled**: Delay change scheduled
+- **DefaultAdminDelayChangeCanceled**: Delay change canceled
+
+This provides comprehensive test data for validating the indexer against all OpenZeppelin Access Control contract variants.
