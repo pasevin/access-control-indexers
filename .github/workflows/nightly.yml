@@ -1,0 +1,98 @@
+name: Nightly Build (All Networks)
+
+on:
+  schedule:
+    # Run at 03:00 UTC every day
+    - cron: "0 3 * * *"
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  build-all-evm:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        network:
+          - ethereum-mainnet
+          - ethereum-sepolia
+          - arbitrum-mainnet
+          - arbitrum-sepolia
+          - polygon-mainnet
+          - polygon-amoy
+          - polygon-zkevm-mainnet
+          - polygon-zkevm-cardona
+          - base-mainnet
+          - base-sepolia
+          - bsc-mainnet
+          - bsc-testnet
+          - optimism-mainnet
+          - optimism-sepolia
+          - avalanche-mainnet
+          - avalanche-fuji
+          - zksync-era-mainnet
+          - zksync-era-sepolia
+          - scroll-mainnet
+          - scroll-sepolia
+          - linea-mainnet
+          - linea-sepolia
+          - monad-testnet
+          - moonbeam-mainnet
+          - moonriver-mainnet
+          - moonbase-alpha-testnet
+          - polkadot-hub
+          - polkadot-hub-testnet
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm --filter './packages/**' build
+
+      - name: Build indexer
+        run: pnpm --filter "@oz-indexers/${{ matrix.network }}" build
+
+  build-all-stellar:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        network:
+          - stellar-mainnet
+          - stellar-testnet
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm --filter './packages/**' build
+
+      - name: Build indexer
+        run: pnpm --filter "@oz-indexers/${{ matrix.network }}" build
