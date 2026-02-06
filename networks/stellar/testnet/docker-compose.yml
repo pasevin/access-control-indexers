@@ -8,9 +8,11 @@ services:
     volumes:
       - .data/postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -22,23 +24,34 @@ services:
         condition: service_healthy
     restart: unless-stopped
     environment:
-      DB_USER: postgres
-      DB_PASS: postgres
-      DB_DATABASE: postgres
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASS: ${POSTGRES_PASSWORD:-postgres}
+      DB_DATABASE: ${POSTGRES_DB:-postgres}
       DB_HOST: postgres
       DB_PORT: 5432
     volumes:
       - ./:/app
-      - ../../../packages/schema:/app/packages/schema:ro
+      - ../../../packages/schema:/packages/schema:ro
     command:
       - -f=/app
       - --db-schema=app
+      # Disable historical state tracking for better indexing performance.
+      # Remove this flag if you need to query historical entity snapshots.
       - --disable-historical
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/ready"]
-      interval: 3s
-      timeout: 5s
-      retries: 10
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000/ready",
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
 
   graphql-engine:
     image: subquerynetwork/subql-query:latest
@@ -49,9 +62,9 @@ services:
         condition: service_healthy
     restart: unless-stopped
     environment:
-      DB_USER: postgres
-      DB_PASS: postgres
-      DB_DATABASE: postgres
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASS: ${POSTGRES_PASSWORD:-postgres}
+      DB_DATABASE: ${POSTGRES_DB:-postgres}
       DB_HOST: postgres
       DB_PORT: 5432
     command:
