@@ -87,10 +87,17 @@ const project: EthereumProject = {
           'Ownable2Step',
           { file: '../../../packages/evm-handlers/abis/Ownable2Step.json' },
         ],
+        [
+          'AccessControlDefaultAdminRules',
+          {
+            file: '../../../packages/evm-handlers/abis/AccessControlDefaultAdminRules.json',
+          },
+        ],
       ]),
       mapping: {
         file: './dist/index.js',
         handlers: [
+          // AccessControl events
           {
             kind: EthereumHandlerKind.Event,
             handler: 'handleRoleGranted',
@@ -106,15 +113,42 @@ const project: EthereumProject = {
             handler: 'handleRoleAdminChanged',
             filter: { topics: ['RoleAdminChanged(bytes32,bytes32,bytes32)'] },
           },
+          // Ownable events
           {
             kind: EthereumHandlerKind.Event,
             handler: 'handleOwnershipTransferred',
             filter: { topics: ['OwnershipTransferred(address,address)'] },
           },
+          // Ownable2Step events
           {
             kind: EthereumHandlerKind.Event,
             handler: 'handleOwnershipTransferStarted',
             filter: { topics: ['OwnershipTransferStarted(address,address)'] },
+          },
+          // AccessControlDefaultAdminRules events
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminTransferScheduled',
+            filter: {
+              topics: ['DefaultAdminTransferScheduled(address,uint48)'],
+            },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminTransferCanceled',
+            filter: { topics: ['DefaultAdminTransferCanceled()'] },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminDelayChangeScheduled',
+            filter: {
+              topics: ['DefaultAdminDelayChangeScheduled(uint48,uint48)'],
+            },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminDelayChangeCanceled',
+            filter: { topics: ['DefaultAdminDelayChangeCanceled()'] },
           },
         ],
       },

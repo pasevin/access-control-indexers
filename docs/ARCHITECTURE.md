@@ -44,13 +44,25 @@ Shared utilities including:
 
 Shared mapping handlers for all EVM-compatible networks:
 
+**AccessControl handlers:**
+
 - `handleRoleGranted`
 - `handleRoleRevoked`
 - `handleRoleAdminChanged`
+
+**Ownable/Ownable2Step handlers:**
+
 - `handleOwnershipTransferred`
 - `handleOwnershipTransferStarted`
 
-Also includes OpenZeppelin contract ABIs.
+**AccessControlDefaultAdminRules handlers:**
+
+- `handleDefaultAdminTransferScheduled`
+- `handleDefaultAdminTransferCanceled`
+- `handleDefaultAdminDelayChangeScheduled`
+- `handleDefaultAdminDelayChangeCanceled`
+
+Also includes OpenZeppelin contract ABIs for AccessControl, Ownable, Ownable2Step, and AccessControlDefaultAdminRules.
 
 ### @oz-indexers/network-config
 
@@ -122,13 +134,15 @@ networks/stellar/{network}/
 
 The schema is a superset of all events across all ecosystems:
 
-| Feature           | EVM              | Stellar | Schema Field               |
-| ----------------- | ---------------- | ------- | -------------------------- |
-| Role events       | ✓                | ✓       | role, account, sender      |
-| Ownership         | ✓                | ✓       | previousOwner, newOwner    |
-| Two-step transfer | ✓ (Ownable2Step) | ✓       | OWNERSHIP_TRANSFER_STARTED |
-| Admin transfer    | ✗                | ✓       | ADMIN*TRANSFER*\*          |
-| Expiration        | ✗                | ✓       | liveUntilLedger            |
+| Feature           | EVM                   | Stellar | Schema Field               |
+| ----------------- | --------------------- | ------- | -------------------------- |
+| Role events       | ✓                     | ✓       | role, account, sender      |
+| Ownership         | ✓                     | ✓       | previousOwner, newOwner    |
+| Two-step transfer | ✓ (Ownable2Step)      | ✓       | OWNERSHIP_TRANSFER_STARTED |
+| Admin transfer    | ✗                     | ✓       | ADMIN*TRANSFER*\*          |
+| Expiration        | ✗                     | ✓       | liveUntilLedger            |
+| Default admin     | ✓ (DefaultAdminRules) | ✗       | DEFAULT*ADMIN*\*           |
+| Delay scheduling  | ✓ (DefaultAdminRules) | ✗       | acceptSchedule, newDelay   |
 
 Fields are nullable when not applicable to a specific network.
 

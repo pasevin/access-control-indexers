@@ -46,3 +46,6 @@ Cargo.lock
 # Hardhat (playgrounds/evm)
 artifacts/
 cache/
+
+# Temp files
+*.tmp

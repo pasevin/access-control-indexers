@@ -146,6 +146,82 @@ All indexers output the same GraphQL schema with these entities:
 
 See [packages/schema/schema.graphql](packages/schema/schema.graphql) for the full schema.
 
+## OpenZeppelin Event Coverage
+
+This indexer provides **complete coverage** of all OpenZeppelin Access Control and Ownable contract events.
+
+### EVM Event Coverage
+
+| Contract                           | Event                                             | Handler                                  | Status |
+| ---------------------------------- | ------------------------------------------------- | ---------------------------------------- | ------ |
+| **AccessControl**                  | `RoleGranted(bytes32,address,address)`            | `handleRoleGranted`                      | ✅     |
+| **AccessControl**                  | `RoleRevoked(bytes32,address,address)`            | `handleRoleRevoked`                      | ✅     |
+| **AccessControl**                  | `RoleAdminChanged(bytes32,bytes32,bytes32)`       | `handleRoleAdminChanged`                 | ✅     |
+| **Ownable**                        | `OwnershipTransferred(address,address)`           | `handleOwnershipTransferred`             | ✅     |
+| **Ownable2Step**                   | `OwnershipTransferStarted(address,address)`       | `handleOwnershipTransferStarted`         | ✅     |
+| **AccessControlDefaultAdminRules** | `DefaultAdminTransferScheduled(address,uint48)`   | `handleDefaultAdminTransferScheduled`    | ✅     |
+| **AccessControlDefaultAdminRules** | `DefaultAdminTransferCanceled()`                  | `handleDefaultAdminTransferCanceled`     | ✅     |
+| **AccessControlDefaultAdminRules** | `DefaultAdminDelayChangeScheduled(uint48,uint48)` | `handleDefaultAdminDelayChangeScheduled` | ✅     |
+| **AccessControlDefaultAdminRules** | `DefaultAdminDelayChangeCanceled()`               | `handleDefaultAdminDelayChangeCanceled`  | ✅     |
+
+### Stellar Event Coverage
+
+| Module             | Event                          | Handler                            | Status |
+| ------------------ | ------------------------------ | ---------------------------------- | ------ |
+| **Access Control** | `role_granted`                 | `handleRoleGranted`                | ✅     |
+| **Access Control** | `role_revoked`                 | `handleRoleRevoked`                | ✅     |
+| **Access Control** | `role_admin_changed`           | `handleRoleAdminChanged`           | ✅     |
+| **Access Control** | `admin_transfer_initiated`     | `handleAdminTransferInitiated`     | ✅     |
+| **Access Control** | `admin_transfer_completed`     | `handleAdminTransferCompleted`     | ✅     |
+| **Access Control** | `admin_renounced`              | `handleAdminRenounced`             | ✅     |
+| **Ownable**        | `ownership_transfer`           | `handleOwnershipTransferStarted`   | ✅     |
+| **Ownable**        | `ownership_transfer_completed` | `handleOwnershipTransferCompleted` | ✅     |
+| **Ownable**        | `ownership_renounced`          | `handleOwnershipRenounced`         | ✅     |
+
+### Event Types (GraphQL Enum)
+
+```graphql
+enum EventType {
+  # Role events (EVM + Stellar)
+  ROLE_GRANTED
+  ROLE_REVOKED
+  ROLE_ADMIN_CHANGED
+
+  # Ownership events (EVM + Stellar)
+  OWNERSHIP_TRANSFER_COMPLETED
+  OWNERSHIP_TRANSFER_STARTED
+  OWNERSHIP_RENOUNCED
+
+  # Admin events (Stellar only)
+  ADMIN_TRANSFER_INITIATED
+  ADMIN_TRANSFER_COMPLETED
+  ADMIN_RENOUNCED
+
+  # Default admin events (EVM AccessControlDefaultAdminRules)
+  DEFAULT_ADMIN_TRANSFER_SCHEDULED
+  DEFAULT_ADMIN_TRANSFER_CANCELED
+  DEFAULT_ADMIN_DELAY_CHANGE_SCHEDULED
+  DEFAULT_ADMIN_DELAY_CHANGE_CANCELED
+}
+```
+
+### Verification Checklist
+
+| #   | Requirement                                       | Status | Evidence                                                             |
+| --- | ------------------------------------------------- | ------ | -------------------------------------------------------------------- |
+| 1   | All AccessControl base events indexed             | ✅     | `RoleGranted`, `RoleRevoked`, `RoleAdminChanged`                     |
+| 2   | All Ownable events indexed                        | ✅     | `OwnershipTransferred` with renounce detection                       |
+| 3   | All Ownable2Step events indexed                   | ✅     | `OwnershipTransferStarted`                                           |
+| 4   | All AccessControlDefaultAdminRules events indexed | ✅     | 4 DefaultAdmin events                                                |
+| 5   | All Stellar Access Control events indexed         | ✅     | 6 events including admin transfer                                    |
+| 6   | All Stellar Ownable events indexed                | ✅     | 3 ownership events                                                   |
+| 7   | RoleMembership state tracking                     | ✅     | Created on grant, removed on revoke                                  |
+| 8   | ContractOwnership state tracking                  | ✅     | Updated on transfer, tracks pending                                  |
+| 9   | Contract metadata tracking                        | ✅     | Type classification (AC/Ownable/Both)                                |
+| 10  | Network field in all entities                     | ✅     | Multi-network query support                                          |
+| 11  | UI Builder adapter compatibility                  | ✅     | Schema matches adapter expectations                                  |
+| 12  | ABI files for all contracts                       | ✅     | AccessControl, Ownable, Ownable2Step, AccessControlDefaultAdminRules |
+
 ## Available Scripts
 
 | Command                         | Description                           |
