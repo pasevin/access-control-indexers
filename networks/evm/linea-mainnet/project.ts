@@ -17,6 +17,11 @@ const project: EthereumProject = {
     node: {
       name: '@subql/node-ethereum',
       version: '*',
+      options: {
+        // Skip fetching full transaction data since we only use event handlers
+        // This reduces RPC calls and improves indexing performance
+        skipTransactions: true,
+      },
     },
     query: {
       name: '@subql/query',
@@ -101,6 +106,42 @@ const project: EthereumProject = {
             kind: EthereumHandlerKind.Event,
             handler: 'handleOwnershipTransferStarted',
             filter: { topics: ['OwnershipTransferStarted(address,address)'] },
+          },
+        ],
+      },
+    },
+    // AccessControlDefaultAdminRules events
+    {
+      kind: EthereumDatasourceKind.Runtime,
+      startBlock: 1,
+      options: {
+        abi: 'AccessControlDefaultAdminRules',
+      },
+      assets: new Map([
+        ['AccessControlDefaultAdminRules', { file: '../../../packages/evm-handlers/abis/AccessControlDefaultAdminRules.json' }],
+      ]),
+      mapping: {
+        file: './dist/index.js',
+        handlers: [
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminTransferScheduled',
+            filter: { topics: ['DefaultAdminTransferScheduled(address,uint48)'] },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminTransferCanceled',
+            filter: { topics: ['DefaultAdminTransferCanceled()'] },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminDelayChangeScheduled',
+            filter: { topics: ['DefaultAdminDelayChangeScheduled(uint48,uint48)'] },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminDelayChangeCanceled',
+            filter: { topics: ['DefaultAdminDelayChangeCanceled()'] },
           },
         ],
       },

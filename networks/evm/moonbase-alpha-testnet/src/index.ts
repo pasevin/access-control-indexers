@@ -10,6 +10,10 @@ import {
   handleRoleAdminChanged,
   handleOwnershipTransferred,
   handleOwnershipTransferStarted,
+  handleDefaultAdminTransferScheduled,
+  handleDefaultAdminTransferCanceled,
+  handleDefaultAdminDelayChangeScheduled,
+  handleDefaultAdminDelayChangeCanceled,
 } from '@oz-indexers/evm-handlers';
 
 import {
@@ -38,4 +42,8 @@ export {
   handleRoleAdminChanged,
   handleOwnershipTransferred,
   handleOwnershipTransferStarted,
+  handleDefaultAdminTransferScheduled,
+  handleDefaultAdminTransferCanceled,
+  handleDefaultAdminDelayChangeScheduled,
+  handleDefaultAdminDelayChangeCanceled,
 };

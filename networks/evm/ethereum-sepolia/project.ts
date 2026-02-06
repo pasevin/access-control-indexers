@@ -17,6 +17,11 @@ const project: EthereumProject = {
     node: {
       name: '@subql/node-ethereum',
       version: '*',
+      options: {
+        // Skip fetching full transaction data since we only use event handlers
+        // This reduces RPC calls and improves indexing performance
+        skipTransactions: true,
+      },
     },
     query: {
       name: '@subql/query',
@@ -29,18 +34,21 @@ const project: EthereumProject = {
   },
   network: {
     chainId: '11155111',
-    endpoint: ['https://rpc.sepolia.org'],
+    endpoint: [process.env.SEPOLIA_RPC_URL || 'https://rpc.sepolia.org'],
   },
   dataSources: [
     // AccessControl events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 1,
+      startBlock: 10200000,
       options: {
         abi: 'AccessControl',
       },
       assets: new Map([
-        ['AccessControl', { file: '../../../packages/evm-handlers/abis/AccessControl.json' }],
+        [
+          'AccessControl',
+          { file: '../../../packages/evm-handlers/abis/AccessControl.json' },
+        ],
       ]),
       mapping: {
         file: './dist/index.js',
@@ -66,12 +74,15 @@ const project: EthereumProject = {
     // Ownable events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 1,
+      startBlock: 10200000,
       options: {
         abi: 'Ownable',
       },
       assets: new Map([
-        ['Ownable', { file: '../../../packages/evm-handlers/abis/Ownable.json' }],
+        [
+          'Ownable',
+          { file: '../../../packages/evm-handlers/abis/Ownable.json' },
+        ],
       ]),
       mapping: {
         file: './dist/index.js',
@@ -87,12 +98,15 @@ const project: EthereumProject = {
     // Ownable2Step events
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 1,
+      startBlock: 10200000,
       options: {
         abi: 'Ownable2Step',
       },
       assets: new Map([
-        ['Ownable2Step', { file: '../../../packages/evm-handlers/abis/Ownable2Step.json' }],
+        [
+          'Ownable2Step',
+          { file: '../../../packages/evm-handlers/abis/Ownable2Step.json' },
+        ],
       ]),
       mapping: {
         file: './dist/index.js',
@@ -101,6 +115,51 @@ const project: EthereumProject = {
             kind: EthereumHandlerKind.Event,
             handler: 'handleOwnershipTransferStarted',
             filter: { topics: ['OwnershipTransferStarted(address,address)'] },
+          },
+        ],
+      },
+    },
+    // AccessControlDefaultAdminRules events
+    {
+      kind: EthereumDatasourceKind.Runtime,
+      startBlock: 10200000,
+      options: {
+        abi: 'AccessControlDefaultAdminRules',
+      },
+      assets: new Map([
+        [
+          'AccessControlDefaultAdminRules',
+          {
+            file: '../../../packages/evm-handlers/abis/AccessControlDefaultAdminRules.json',
+          },
+        ],
+      ]),
+      mapping: {
+        file: './dist/index.js',
+        handlers: [
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminTransferScheduled',
+            filter: {
+              topics: ['DefaultAdminTransferScheduled(address,uint48)'],
+            },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminTransferCanceled',
+            filter: { topics: ['DefaultAdminTransferCanceled()'] },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminDelayChangeScheduled',
+            filter: {
+              topics: ['DefaultAdminDelayChangeScheduled(uint48,uint48)'],
+            },
+          },
+          {
+            kind: EthereumHandlerKind.Event,
+            handler: 'handleDefaultAdminDelayChangeCanceled',
+            filter: { topics: ['DefaultAdminDelayChangeCanceled()'] },
           },
         ],
       },
