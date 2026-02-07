@@ -340,6 +340,11 @@ services:
       # Disable historical state tracking for better indexing performance.
       # Remove this flag if you need to query historical entity snapshots.
       - --disable-historical
+      # Skip fetching full transaction data since we only use event handlers.
+      # This significantly reduces the number of RPC requests per block.
+      - --skipTransactions
+      # Flush store cache asynchronously for better throughput during catch-up.
+      - --store-cache-async
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/ready"]
       interval: 5s

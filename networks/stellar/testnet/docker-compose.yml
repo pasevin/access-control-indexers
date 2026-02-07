@@ -29,6 +29,10 @@ services:
       DB_DATABASE: ${POSTGRES_DB:-postgres}
       DB_HOST: postgres
       DB_PORT: 5432
+      START_BLOCK: ${START_BLOCK:-}
+      # Retry logic for rate-limited public Horizon endpoints (HTTP 429)
+      STELLAR_ENDPOINT_RETRY_ATTEMPTS: 10
+      STELLAR_ENDPOINT_RETRY_DELAY: 20000
     volumes:
       - ./:/app
       - ../../../packages/schema:/packages/schema:ro
@@ -38,6 +42,16 @@ services:
       # Disable historical state tracking for better indexing performance.
       # Remove this flag if you need to query historical entity snapshots.
       - --disable-historical
+      # Skip fetching full transaction data since we only use event handlers.
+      # This significantly reduces the number of RPC requests per block.
+      - --skipTransactions
+      # Flush store cache asynchronously for better throughput during catch-up.
+      - --store-cache-async
+      # Tuned for rate-limited public endpoints.
+      # Increase --workers and --batch-size if using a private Horizon endpoint.
+      - --workers=1
+      - --batch-size=5
+      - --timeout=120000
     healthcheck:
       test:
         [
