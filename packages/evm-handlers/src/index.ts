@@ -23,8 +23,8 @@
  */
 
 // Context and initialization
-export { initializeHandlers, getContext, getNetworkId } from './context';
-export type { InitConfig } from './context';
+export { initializeHandlers, getContext, getNetworkId } from "./context";
+export type { InitConfig } from "./context";
 
 // Type definitions
 export type {
@@ -38,7 +38,7 @@ export type {
   ContractOwnershipEntity,
   ContractEntity,
   Store,
-} from './types';
+} from "./types";
 
 // Handlers
 export {
@@ -52,10 +52,15 @@ export {
   handleDefaultAdminTransferCanceled,
   handleDefaultAdminDelayChangeScheduled,
   handleDefaultAdminDelayChangeCanceled,
-} from './handlers';
+} from "./handlers";
 
 // Utilities
-export { formatRole, normalizeAddress, isOwnershipRenounce } from './utils';
+export {
+  formatRole,
+  normalizeAddress,
+  isOwnershipRenounce,
+  isDefaultAdminRole,
+} from "./utils";
 
 // Validation
 export {
@@ -68,4 +73,4 @@ export {
   isValidEvmRole,
   isValidEvmTxHash,
   isValidEvmBlockNumber,
-} from './validation';
+} from "./validation";

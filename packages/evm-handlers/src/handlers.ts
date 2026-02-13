@@ -7,7 +7,7 @@
  * Each network indexer re-exports these handlers and provides network-specific configuration.
  */
 
-import { EthereumLog } from '@subql/types-ethereum';
+import { EthereumLog } from "@subql/types-ethereum";
 import {
   EventType,
   ContractType,
@@ -16,10 +16,15 @@ import {
   generateContractOwnershipId,
   generateContractId,
   isValidEvent,
-} from '@oz-indexers/common';
-import { formatRole, normalizeAddress, isOwnershipRenounce } from './utils';
-import { validateEvmEvent } from './validation';
-import { getContext } from './context';
+} from "@oz-indexers/common";
+import {
+  formatRole,
+  normalizeAddress,
+  isOwnershipRenounce,
+  isDefaultAdminRole,
+} from "./utils";
+import { validateEvmEvent } from "./validation";
+import { getContext } from "./context";
 
 /**
  * Updates or creates contract metadata
@@ -42,6 +47,7 @@ async function updateContractMetadata(
     eventType === EventType.ROLE_GRANTED ||
     eventType === EventType.ROLE_REVOKED ||
     eventType === EventType.ROLE_ADMIN_CHANGED ||
+    eventType === EventType.ADMIN_RENOUNCED ||
     eventType === EventType.DEFAULT_ADMIN_TRANSFER_SCHEDULED ||
     eventType === EventType.DEFAULT_ADMIN_TRANSFER_CANCELED ||
     eventType === EventType.DEFAULT_ADMIN_DELAY_CHANGE_SCHEDULED ||
@@ -90,7 +96,7 @@ export async function handleRoleGranted(log: EthereumLog): Promise<void> {
 
   const validation = validateEvmEvent(
     log.topics,
-    'RoleGranted',
+    "RoleGranted",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash
@@ -159,7 +165,7 @@ export async function handleRoleRevoked(log: EthereumLog): Promise<void> {
 
   const validation = validateEvmEvent(
     log.topics,
-    'RoleRevoked',
+    "RoleRevoked",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash
@@ -172,18 +178,24 @@ export async function handleRoleRevoked(log: EthereumLog): Promise<void> {
   const sender = normalizeAddress(`0x${log.topics[3].slice(26)}`);
   const timestamp = new Date(Number(log.block.timestamp) * 1000);
 
-  // Create event record
+  // Classify as ADMIN_RENOUNCED when the revoked role is the default admin role (bytes32 zero)
+  const eventType = isDefaultAdminRole(role)
+    ? EventType.ADMIN_RENOUNCED
+    : EventType.ROLE_REVOKED;
+
+  // Create event record. For ADMIN_RENOUNCED, set newAdmin so adapters that read newAdmin get the renouncing account.
   const event = AccessControlEvent.create({
     id: generateEventId(log.transactionHash, log.logIndex),
     network: NETWORK_ID,
     contract: contractAddress,
-    eventType: EventType.ROLE_REVOKED,
+    eventType,
     blockNumber: BigInt(log.blockNumber),
     timestamp,
     txHash: log.transactionHash,
     role,
     account,
     sender,
+    ...(eventType === EventType.ADMIN_RENOUNCED && { newAdmin: account }),
   });
   await event.save();
 
@@ -194,14 +206,10 @@ export async function handleRoleRevoked(log: EthereumLog): Promise<void> {
     role,
     account
   );
-  await store.remove('RoleMembership', membershipId);
+  await store.remove("RoleMembership", membershipId);
 
   // Update contract metadata
-  await updateContractMetadata(
-    contractAddress,
-    EventType.ROLE_REVOKED,
-    timestamp
-  );
+  await updateContractMetadata(contractAddress, eventType, timestamp);
 }
 
 /**
@@ -217,7 +225,7 @@ export async function handleRoleAdminChanged(log: EthereumLog): Promise<void> {
 
   const validation = validateEvmEvent(
     log.topics,
-    'RoleAdminChanged',
+    "RoleAdminChanged",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash
@@ -268,7 +276,7 @@ export async function handleOwnershipTransferred(
 
   const validation = validateEvmEvent(
     log.topics,
-    'OwnershipTransferred',
+    "OwnershipTransferred",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash
@@ -342,7 +350,7 @@ export async function handleOwnershipTransferStarted(
 
   const validation = validateEvmEvent(
     log.topics,
-    'OwnershipTransferStarted',
+    "OwnershipTransferStarted",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash
@@ -410,7 +418,7 @@ export async function handleDefaultAdminTransferScheduled(
 
   const validation = validateEvmEvent(
     log.topics,
-    'DefaultAdminTransferScheduled',
+    "DefaultAdminTransferScheduled",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash
@@ -421,7 +429,7 @@ export async function handleDefaultAdminTransferScheduled(
   const newAdmin = normalizeAddress(`0x${log.topics[1].slice(26)}`);
   // acceptSchedule is in the data field (non-indexed uint48)
   // log.data includes 0x prefix, so first 32-byte word is at [2, 66)
-  const acceptSchedule = BigInt('0x' + log.data.slice(2, 66));
+  const acceptSchedule = BigInt("0x" + log.data.slice(2, 66));
   const timestamp = new Date(Number(log.block.timestamp) * 1000);
 
   // Create event record
@@ -470,7 +478,7 @@ export async function handleDefaultAdminTransferCanceled(
 
   const validation = validateEvmEvent(
     log.topics,
-    'DefaultAdminTransferCanceled',
+    "DefaultAdminTransferCanceled",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash
@@ -524,7 +532,7 @@ export async function handleDefaultAdminDelayChangeScheduled(
 
   const validation = validateEvmEvent(
     log.topics,
-    'DefaultAdminDelayChangeScheduled',
+    "DefaultAdminDelayChangeScheduled",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash
@@ -534,8 +542,8 @@ export async function handleDefaultAdminDelayChangeScheduled(
   const contractAddress = normalizeAddress(log.address);
   // Both values are in the data field (non-indexed)
   // log.data includes 0x prefix: first word at [2, 66), second at [66, 130)
-  const newDelay = BigInt('0x' + log.data.slice(2, 66));
-  const effectSchedule = BigInt('0x' + log.data.slice(66, 130));
+  const newDelay = BigInt("0x" + log.data.slice(2, 66));
+  const effectSchedule = BigInt("0x" + log.data.slice(66, 130));
   const timestamp = new Date(Number(log.block.timestamp) * 1000);
 
   // Create event record
@@ -575,7 +583,7 @@ export async function handleDefaultAdminDelayChangeCanceled(
 
   const validation = validateEvmEvent(
     log.topics,
-    'DefaultAdminDelayChangeCanceled',
+    "DefaultAdminDelayChangeCanceled",
     NETWORK_ID,
     log.blockNumber,
     log.transactionHash

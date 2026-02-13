@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { formatRole, normalizeAddress, isOwnershipRenounce } from "../utils";
+import {
+  formatRole,
+  normalizeAddress,
+  isOwnershipRenounce,
+  isDefaultAdminRole,
+} from "../utils";
 
 describe("formatRole", () => {
   it("normalizes a role with 0x prefix to lowercase", () => {
@@ -83,6 +88,35 @@ describe("isOwnershipRenounce", () => {
   it("returns false for address with only some zeros", () => {
     expect(
       isOwnershipRenounce("0x0000000000000000000000000000000000000001")
+    ).toBe(false);
+  });
+});
+
+describe("isDefaultAdminRole", () => {
+  const DEFAULT_ADMIN_ROLE_BYTES32 =
+    "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+  it("returns true for bytes32 zero with 0x prefix", () => {
+    expect(isDefaultAdminRole(DEFAULT_ADMIN_ROLE_BYTES32)).toBe(true);
+  });
+
+  it("returns true for bytes32 zero without 0x prefix", () => {
+    expect(isDefaultAdminRole(DEFAULT_ADMIN_ROLE_BYTES32.slice(2))).toBe(true);
+  });
+
+  it("returns false for a non-zero role", () => {
+    expect(
+      isDefaultAdminRole(
+        "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6"
+      )
+    ).toBe(false);
+  });
+
+  it("returns false for bytes32 with one non-zero byte", () => {
+    expect(
+      isDefaultAdminRole(
+        "0x0000000000000000000000000000000000000000000000000000000000000001"
+      )
     ).toBe(false);
   });
 });
