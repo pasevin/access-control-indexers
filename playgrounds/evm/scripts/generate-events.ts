@@ -9,10 +9,10 @@ import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 
 // Deployed contract addresses on Sepolia
 const DEPLOYED_CONTRACTS = {
-  accessControl: getAddress("0x68b0f84b4209dc39e400796427580a79de523a7a"),
-  ownable: getAddress("0x1777e698cc2ebb75f05e3539edc9b2c8baa8fd7a"),
-  ownable2Step: getAddress("0x811cd79da9a24be9ef56d9faf77771191ee73e13"),
-  combined: getAddress("0xa043689c5deac2f7fdbc18086ca7e621be6732b9"),
+  accessControl: getAddress("0x447b67c43347ae336cabe9d1c60a56df82781e1e"),
+  ownable: getAddress("0x02c0ae8e78843b8c5389b57077ebd26632206fe0"),
+  ownable2Step: getAddress("0x1300522c7103eb5e041f85f8f7dc3354501b1e75"),
+  combined: getAddress("0x0e46df975af95b8bf8f52abc97a49669c2d663b5"),
 };
 
 // Generate random addresses for test accounts
