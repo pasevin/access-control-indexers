@@ -11,7 +11,6 @@ Test contracts for OpenZeppelin Access Control indexers on EVM networks.
 - **AccessControlMock**: Standard AccessControl implementation
 - **OwnableMock**: Standard Ownable implementation
 - **Ownable2StepMock**: Two-step ownership transfer
-- **AccessControlDefaultAdminRulesMock**: Two-step default admin transfer with delay
 - **CombinedMock**: Both AccessControl and Ownable2Step
 
 ## Setup
@@ -20,43 +19,67 @@ Test contracts for OpenZeppelin Access Control indexers on EVM networks.
 # Install dependencies
 npm install
 
+# Copy the environment file and fill in your values
+cp .env.example .env
+
 # Compile contracts
 npm run compile
 ```
+
+### Environment Variables
+
+Create a `.env` file in this directory (see `.env.example`):
+
+| Variable            | Required      | Description                                                       |
+| ------------------- | ------------- | ----------------------------------------------------------------- |
+| `PRIVATE_KEY`       | Yes (testnet) | Private key for deployment and transactions                       |
+| `ETHERSCAN_API_KEY` | Yes (verify)  | Etherscan API key ([get one here](https://etherscan.io/myapikey)) |
+| `SEPOLIA_RPC_URL`   | No            | Override the default Sepolia RPC endpoint                         |
 
 ## Deploy
 
 ```bash
 # Deploy to local network
-npx hardhat run scripts/deploy.ts
+npm run deploy
 
-# Deploy to testnet (configure in hardhat.config.ts)
-npx hardhat run scripts/deploy.ts --network sepolia
+# Deploy to Sepolia testnet
+npm run deploy:sepolia
 ```
+
+## Verify Contracts
+
+After deploying, verify the source code on Etherscan, Sourcify, and Blockscout:
+
+```bash
+# Verify all contracts on Sepolia
+npm run verify:sepolia
+
+# Verify a single contract
+CONTRACT=accessControl npm run verify:sepolia
+```
+
+Valid `CONTRACT` values: `accessControl`, `ownable`, `ownable2Step`, `combined`.
 
 ## Generate Test Events
 
 ```bash
 # Generate events on local network
-npx hardhat run scripts/generate-events.ts
+npm run generate-events
 
-# Generate events on testnet
-npx hardhat run scripts/generate-events.ts --network sepolia
+# Generate events on Sepolia testnet
+npm run generate-events:sepolia
 ```
 
 ## Network Configuration
 
-Edit `hardhat.config.ts` to add network configurations:
+The Sepolia network is pre-configured in `hardhat.config.ts`. Edit it to add more networks:
 
 ```typescript
 networks: {
   sepolia: {
-    url: "https://rpc.sepolia.org",
-    accounts: [process.env.PRIVATE_KEY],
-  },
-  arbitrumSepolia: {
-    url: "https://sepolia-rollup.arbitrum.io/rpc",
-    accounts: [process.env.PRIVATE_KEY],
+    type: 'http',
+    url: process.env.SEPOLIA_RPC_URL || 'https://ethereum-sepolia-rpc.publicnode.com',
+    accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
   },
 }
 ```
@@ -75,12 +98,5 @@ The `generate-events.ts` script creates:
 
 - **OwnershipTransferStarted**: Two-step transfer initiation
 - **OwnershipTransferred**: Ownership completion
-
-### AccessControlDefaultAdminRules Events
-
-- **DefaultAdminTransferScheduled**: Two-step default admin transfer scheduled
-- **DefaultAdminTransferCanceled**: Default admin transfer canceled
-- **DefaultAdminDelayChangeScheduled**: Delay change scheduled
-- **DefaultAdminDelayChangeCanceled**: Delay change canceled
 
 This provides comprehensive test data for validating the indexer against all OpenZeppelin Access Control contract variants.

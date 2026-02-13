@@ -6,12 +6,17 @@
   "scripts": {
     "compile": "hardhat compile",
     "deploy": "hardhat run scripts/deploy.ts",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia",
+    "verify:sepolia": "hardhat run scripts/verify.ts --network sepolia",
     "generate-events": "hardhat run scripts/generate-events.ts",
+    "generate-events:sepolia": "hardhat run scripts/generate-events.ts --network sepolia",
     "test": "hardhat test nodejs"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^3.0.10",
     "@nomicfoundation/hardhat-viem": "^3.0.0",
     "@openzeppelin/contracts": "^5.0.0",
+    "dotenv": "^17.2.4",
     "hardhat": "^3.0.0",
     "typescript": "^5.0.0"
   },
