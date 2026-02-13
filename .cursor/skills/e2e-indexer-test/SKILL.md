@@ -85,6 +85,31 @@ PRIVATE_KEY=<key> npx hardhat run scripts/deploy.ts --network sepolia
 
 Record the deployed contract addresses from the output.
 
+### Step 4.5: Verify Contracts (ask user)
+
+**IMPORTANT:** After deploying contracts, always ask the user if they want to verify the contracts on Etherscan. Use the `AskQuestion` tool to prompt them.
+
+If the user wants to verify:
+
+1. Ensure `ETHERSCAN_API_KEY` is set in `playgrounds/evm/.env` (ask user for the key if not present)
+2. Update `playgrounds/evm/scripts/verify.ts` — set `DEPLOYED_CONTRACTS` to the addresses from Step 4, and `CONSTRUCTOR_ARG` to the deployer address
+3. Run verification:
+
+```bash
+cd playgrounds/evm
+npm run verify:sepolia
+```
+
+Or verify a single contract:
+
+```bash
+CONTRACT=accessControl npm run verify:sepolia
+```
+
+Valid `CONTRACT` values: `accessControl`, `ownable`, `ownable2Step`, `combined`.
+
+The script verifies on Etherscan, Sourcify, and Blockscout automatically. It reads `ETHERSCAN_API_KEY` from the `.env` file via `dotenv`.
+
 ### Step 5: Update & Run Event Generation
 
 Edit `playgrounds/evm/scripts/generate-events.ts`:
@@ -222,4 +247,12 @@ docker compose down
 
 ## Hardhat Network Config
 
-The playground uses Hardhat v3 with viem plugin. Network is configured in `playgrounds/evm/hardhat.config.ts`. Set `PRIVATE_KEY` and optionally `SEPOLIA_RPC_URL` as environment variables.
+The playground uses Hardhat v3 with viem and verify plugins. Network is configured in `playgrounds/evm/hardhat.config.ts`. Environment variables are loaded from `playgrounds/evm/.env` via `dotenv`.
+
+| Variable            | Required      | Description                                 |
+| ------------------- | ------------- | ------------------------------------------- |
+| `PRIVATE_KEY`       | Yes (testnet) | Private key for deployment and transactions |
+| `ETHERSCAN_API_KEY` | Yes (verify)  | Etherscan API key for contract verification |
+| `SEPOLIA_RPC_URL`   | No            | Override the default Sepolia RPC endpoint   |
+
+See `playgrounds/evm/.env.example` for the template.
