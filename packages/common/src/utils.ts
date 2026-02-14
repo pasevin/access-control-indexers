@@ -2,7 +2,7 @@
  * Utility functions for Access Control indexers
  */
 
-import { EventType } from './types';
+import { EventType } from "./types";
 
 /**
  * Generates a unique event ID
@@ -64,7 +64,8 @@ export function isRoleEvent(eventType: EventType): boolean {
   return (
     eventType === EventType.ROLE_GRANTED ||
     eventType === EventType.ROLE_REVOKED ||
-    eventType === EventType.ROLE_ADMIN_CHANGED
+    eventType === EventType.ROLE_ADMIN_CHANGED ||
+    eventType === EventType.ADMIN_RENOUNCED
   );
 }
 
@@ -78,4 +79,3 @@ export function isOwnershipEvent(eventType: EventType): boolean {
     eventType === EventType.OWNERSHIP_RENOUNCED
   );
 }
-

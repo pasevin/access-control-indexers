@@ -127,6 +127,10 @@ describe("isRoleEvent", () => {
     expect(isRoleEvent(EventType.ROLE_ADMIN_CHANGED)).toBe(true);
   });
 
+  it("returns true for ADMIN_RENOUNCED", () => {
+    expect(isRoleEvent(EventType.ADMIN_RENOUNCED)).toBe(true);
+  });
+
   it("returns false for OWNERSHIP_TRANSFER_COMPLETED", () => {
     expect(isRoleEvent(EventType.OWNERSHIP_TRANSFER_COMPLETED)).toBe(false);
   });
