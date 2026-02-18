@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pasevin/access-control-indexers.git",
+    "url": "https://github.com/OpenZeppelin/access-control-indexers.git",
     "directory": "networks/evm/scroll-mainnet"
   },
   "author": "OpenZeppelin",
