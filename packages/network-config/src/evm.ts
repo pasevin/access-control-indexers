@@ -19,7 +19,7 @@ export const ETHEREUM_MAINNET: EvmNetworkConfig = {
   chainId: 1,
   rpcUrl: "https://ethereum-rpc.publicnode.com",
   explorerUrl: "https://etherscan.io",
-  startBlock: 4719568, // OZ Contracts v2 (Ownable) release (Dec 2017)
+  startBlock: 4719568, // OZ Contracts v1.x era — earliest Ownable (OwnershipTransferred) availability (Dec 2017)
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -45,7 +45,7 @@ export const POLYGON_MAINNET: EvmNetworkConfig = {
   chainId: 137,
   rpcUrl: "https://polygon-rpc.com",
   explorerUrl: "https://polygonscan.com",
-  startBlock: 17000000, // earliest OZ AccessControl deployments (~Aug 2021)
+  startBlock: 1, // chain launched May 2020, after OZ v3.0 (AccessControl) release
   subqlNode: "@subql/node-ethereum",
 };
 
@@ -84,7 +84,7 @@ export const BSC_MAINNET: EvmNetworkConfig = {
   chainId: 56,
   rpcUrl: "https://bsc-dataseed.binance.org",
   explorerUrl: "https://bscscan.com",
-  startBlock: 3500000, // earliest OZ AccessControl deployments (~Jan 2021)
+  startBlock: 1, // chain launched Sep 2020, after OZ v3.0 (AccessControl) release
   subqlNode: "@subql/node-ethereum",
 };
 
