@@ -15,42 +15,57 @@ import { getAddress } from "viem";
 
 // Deployed contract addresses on Sepolia
 const DEPLOYED_CONTRACTS = {
-  accessControl: getAddress("0x313dc81b1ce9832d081b736fd21b37be3dc88a91"),
-  ownable: getAddress("0x99b9956099e77927b8cae40b997d016bfac08057"),
-  ownable2Step: getAddress("0xca5a8d756e764591078ca804b9b5674af6b0fbad"),
-  combined: getAddress("0x737c336aa25af712799743d3c349cb93b50addaa"),
+  accessControl: getAddress("0xd2e50107e0250631f5dff19a4ea226a04a0e747e"),
+  defaultAdminRules: getAddress("0xd5590c114f7331d61f5c952e68be161aa5fed14e"),
+  ownable: getAddress("0xeb3fbb1d60cc21f36f3545f6b9421b62bd28cd5c"),
+  ownable2Step: getAddress("0x868d17c3aaaf3c053e2fcb1bcdea88a6afc95c0d"),
+  combined: getAddress("0x5adda282f133b878270282e15c1c9a8d0e228f51"),
 };
 
 // Constructor argument used for all contracts (deployer/owner address)
 const CONSTRUCTOR_ARG = getAddress(
-  "0x69e6ad616fc2d00a704bc70862a59f6b15b87a47"
+  "0x69E6Ad616fc2d00a704bc70862A59F6B15b87a47"
 );
 
-// Contract definitions mapping keys to contract names
+// Initial delay passed to DefaultAdminRules constructors (must match deploy)
+const DEFAULT_ADMIN_DELAY = 0;
+
+// Contract definitions mapping keys to contract names and constructor args
 const CONTRACT_DEFINITIONS: {
   key: string;
   name: string;
   address: string;
+  constructorArgs: string;
 }[] = [
   {
     key: "accessControl",
     name: "AccessControlMock",
     address: DEPLOYED_CONTRACTS.accessControl,
+    constructorArgs: CONSTRUCTOR_ARG,
+  },
+  {
+    key: "defaultAdminRules",
+    name: "DefaultAdminRulesMock",
+    address: DEPLOYED_CONTRACTS.defaultAdminRules,
+    constructorArgs: `${DEFAULT_ADMIN_DELAY} ${CONSTRUCTOR_ARG}`,
   },
   {
     key: "ownable",
     name: "OwnableMock",
     address: DEPLOYED_CONTRACTS.ownable,
+    constructorArgs: CONSTRUCTOR_ARG,
   },
   {
     key: "ownable2Step",
     name: "Ownable2StepMock",
     address: DEPLOYED_CONTRACTS.ownable2Step,
+    constructorArgs: CONSTRUCTOR_ARG,
   },
   {
     key: "combined",
     name: "CombinedMock",
     address: DEPLOYED_CONTRACTS.combined,
+    constructorArgs: `${DEFAULT_ADMIN_DELAY} ${CONSTRUCTOR_ARG}`,
   },
 ];
 
@@ -65,11 +80,11 @@ function verifyContract(
   networkName: string,
   name: string,
   address: string,
-  constructorArg: string
+  constructorArgs: string
 ): VerifyResult {
   console.log(`\n--- Verifying ${name} at ${address} ---`);
 
-  const cmd = `npx hardhat verify --network ${networkName} ${address} ${constructorArg}`;
+  const cmd = `npx hardhat verify --network ${networkName} ${address} ${constructorArgs}`;
 
   try {
     const output = execSync(cmd, {
@@ -156,7 +171,7 @@ function main() {
       networkName,
       contract.name,
       contract.address,
-      CONSTRUCTOR_ARG
+      contract.constructorArgs
     );
     results.push(result);
   }
