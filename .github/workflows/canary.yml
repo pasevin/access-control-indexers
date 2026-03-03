@@ -1,0 +1,188 @@
+name: Canary — Indexer Health Check
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      network:
+        description: "Single network to check (leave empty for all)"
+        required: false
+        type: string
+      filter:
+        description: "Filter by type"
+        required: false
+        type: choice
+        default: "all"
+        options:
+          - all
+          - mainnet
+          - testnet
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build-matrix.outputs.matrix }}
+      count: ${{ steps.build-matrix.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build matrix from endpoints config
+        id: build-matrix
+        run: |
+          CONFIG=".github/canary/endpoints.json"
+
+          NETWORK_FILTER="${{ inputs.network }}"
+          TYPE_FILTER="${{ inputs.filter || 'all' }}"
+
+          MATRIX=$(jq -c --arg net "$NETWORK_FILTER" --arg type "$TYPE_FILTER" '
+            .networks
+            | map(select(.endpoint != ""))
+            | if $net != "" then map(select(.id == $net)) else . end
+            | if $type != "all" then map(select(.type == $type)) else . end
+          ' "$CONFIG")
+
+          COUNT=$(echo "$MATRIX" | jq 'length')
+          echo "matrix={\"include\":$MATRIX}" >> "$GITHUB_OUTPUT"
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Found $COUNT networks to check"
+
+  health-check:
+    needs: setup
+    if: needs.setup.outputs.count != '0'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+    steps:
+      - name: Check indexer metadata
+        id: metadata
+        run: |
+          ENDPOINT="${{ matrix.endpoint }}"
+          NETWORK="${{ matrix.id }}"
+          MAX_LAG="${{ matrix.maxLag }}"
+
+          echo "### $NETWORK" >> "$GITHUB_STEP_SUMMARY"
+          echo "Endpoint: \`$ENDPOINT\`" >> "$GITHUB_STEP_SUMMARY"
+
+          RESPONSE=$(curl -sf --max-time 30 -X POST "$ENDPOINT" \
+            -H "Content-Type: application/json" \
+            -d '{"query":"{ _metadata { lastProcessedHeight targetHeight indexerHealthy indexerNodeVersion } }"}') || {
+            echo "::error::[$NETWORK] Endpoint unreachable or timed out"
+            echo "- **Status**: UNREACHABLE" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          }
+
+          HEALTHY=$(echo "$RESPONSE" | jq -r '.data._metadata.indexerHealthy')
+          LAST=$(echo "$RESPONSE" | jq -r '.data._metadata.lastProcessedHeight')
+          TARGET=$(echo "$RESPONSE" | jq -r '.data._metadata.targetHeight')
+          VERSION=$(echo "$RESPONSE" | jq -r '.data._metadata.indexerNodeVersion // "unknown"')
+
+          if [ "$LAST" = "null" ] || [ "$TARGET" = "null" ]; then
+            echo "::error::[$NETWORK] Metadata returned null heights"
+            echo "- **Status**: NULL HEIGHTS" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          LAG=$((TARGET - LAST))
+
+          echo "- Healthy: \`$HEALTHY\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Last processed: \`$LAST\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Target: \`$TARGET\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Lag: \`$LAG\` blocks (max: \`$MAX_LAG\`)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Node version: \`$VERSION\`" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$HEALTHY" != "true" ]; then
+            echo "::warning::[$NETWORK] indexerHealthy=$HEALTHY"
+          fi
+
+          if [ "$LAG" -gt "$MAX_LAG" ]; then
+            echo "::error::[$NETWORK] Block lag ($LAG) exceeds threshold ($MAX_LAG)"
+            exit 1
+          fi
+
+          echo "lag=$LAG" >> "$GITHUB_OUTPUT"
+          echo "healthy=$HEALTHY" >> "$GITHUB_OUTPUT"
+
+      - name: Smoke query — contracts
+        run: |
+          RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
+            -H "Content-Type: application/json" \
+            -d '{"query":"{ contracts(first: 5) { nodes { id address network type } } }"}') || {
+            echo "::error::[${{ matrix.id }}] Contracts query failed"
+            exit 1
+          }
+          echo "$RESPONSE" | jq -e '.data.contracts.nodes' > /dev/null 2>&1 || {
+            echo "::error::[${{ matrix.id }}] Contracts query returned unexpected shape"
+            echo "$RESPONSE" | jq .
+            exit 1
+          }
+          COUNT=$(echo "$RESPONSE" | jq '.data.contracts.nodes | length')
+          echo "- Contracts returned: \`$COUNT\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Smoke query — recent events
+        run: |
+          RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
+            -H "Content-Type: application/json" \
+            -d '{"query":"{ accessControlEvents(first: 5, orderBy: BLOCK_NUMBER_DESC) { nodes { id eventType blockNumber contract } } }"}') || {
+            echo "::error::[${{ matrix.id }}] Events query failed"
+            exit 1
+          }
+          echo "$RESPONSE" | jq -e '.data.accessControlEvents.nodes' > /dev/null 2>&1 || {
+            echo "::error::[${{ matrix.id }}] Events query returned unexpected shape"
+            echo "$RESPONSE" | jq .
+            exit 1
+          }
+          COUNT=$(echo "$RESPONSE" | jq '.data.accessControlEvents.nodes | length')
+          echo "- Recent events returned: \`$COUNT\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Smoke query — role memberships
+        run: |
+          RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
+            -H "Content-Type: application/json" \
+            -d '{"query":"{ roleMemberships(first: 5) { nodes { id contract role account } } }"}') || {
+            echo "::error::[${{ matrix.id }}] RoleMemberships query failed"
+            exit 1
+          }
+          echo "$RESPONSE" | jq -e '.data.roleMemberships.nodes' > /dev/null 2>&1 || {
+            echo "::error::[${{ matrix.id }}] RoleMemberships query returned unexpected shape"
+            echo "$RESPONSE" | jq .
+            exit 1
+          }
+          COUNT=$(echo "$RESPONSE" | jq '.data.roleMemberships.nodes | length')
+          echo "- Role memberships returned: \`$COUNT\`" >> "$GITHUB_STEP_SUMMARY"
+
+  summary:
+    needs: [setup, health-check]
+    if: always() && needs.setup.outputs.count != '0'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate results
+        run: |
+          if [ "${{ needs.health-check.result }}" = "failure" ]; then
+            echo "::error::One or more indexer health checks failed — see individual job logs"
+            exit 1
+          fi
+          echo "All indexer health checks passed."
+
+      # Uncomment and configure to enable Slack notifications on failure:
+      # - name: Notify Slack on failure
+      #   if: failure()
+      #   uses: slackapi/slack-github-action@v2.0.0
+      #   with:
+      #     webhook: ${{ secrets.SLACK_CANARY_WEBHOOK }}
+      #     webhook-type: incoming-webhook
+      #     payload: |
+      #       {
+      #         "text": "🐤 Canary FAILED — one or more SubQuery indexers are unhealthy.\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      #       }
+
+  no-endpoints:
+    needs: setup
+    if: needs.setup.outputs.count == '0'
+    runs-on: ubuntu-latest
+    steps:
+      - name: No endpoints configured
+        run: |
+          echo "::notice::No endpoints matched the filter (network=${{ inputs.network }}, type=${{ inputs.filter || 'all' }}). Check .github/canary/endpoints.json."
