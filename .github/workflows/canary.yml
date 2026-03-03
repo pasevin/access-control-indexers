@@ -1,5 +1,9 @@
 name: Canary — Indexer Health Check
 
+concurrency:
+  group: canary-indexer-health
+  cancel-in-progress: true
+
 on:
   schedule:
     - cron: "*/30 * * * *"
@@ -94,7 +98,9 @@ jobs:
           echo "- Node version: \`$VERSION\`" >> "$GITHUB_STEP_SUMMARY"
 
           if [ "$HEALTHY" != "true" ]; then
-            echo "::warning::[$NETWORK] indexerHealthy=$HEALTHY"
+            echo "::error::[$NETWORK] indexerHealthy=$HEALTHY"
+            echo "- **Status**: UNHEALTHY (indexerHealthy=$HEALTHY)" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
           fi
 
           if [ "$LAG" -gt "$MAX_LAG" ]; then

@@ -33,7 +33,8 @@
       "id": "polygon-mainnet",
       "ecosystem": "evm",
       "type": "mainnet",
-      "endpoint": "https://openzeppelin-polygon-mainnet.graphql.subquery.network",
+      "endpoint": "",
+      "_note": "No active node operators yet — enable once SubQuery assigns operators",
       "maxLag": 300
     },
     {
@@ -145,7 +146,8 @@
       "id": "linea-mainnet",
       "ecosystem": "evm",
       "type": "mainnet",
-      "endpoint": "https://openzeppelin-linea-mainnet.graphql.subquery.network",
+      "endpoint": "",
+      "_note": "No active node operators yet — enable once SubQuery assigns operators",
       "maxLag": 200
     },
     {
