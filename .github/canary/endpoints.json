@@ -1,0 +1,215 @@
+{
+  "$comment": "Canary health-check config. Each entry maps a network to its deployed SubQuery endpoint.",
+  "networks": [
+    {
+      "id": "ethereum-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-ethereum-mainnet.graphql.subquery.network",
+      "maxLag": 100
+    },
+    {
+      "id": "ethereum-sepolia",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-ethereum-sepolia.graphql.subquery.network",
+      "maxLag": 100
+    },
+    {
+      "id": "arbitrum-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-arbitrum-mainnet.graphql.subquery.network",
+      "maxLag": 5000
+    },
+    {
+      "id": "arbitrum-sepolia",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-arbitrum-sepolia.graphql.subquery.network",
+      "maxLag": 5000
+    },
+    {
+      "id": "polygon-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-polygon-mainnet.graphql.subquery.network",
+      "maxLag": 300
+    },
+    {
+      "id": "polygon-amoy",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-polygon-amoy.graphql.subquery.network",
+      "maxLag": 300
+    },
+    {
+      "id": "polygon-zkevm-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-polygon-zkevm-mainnet.graphql.subquery.network",
+      "maxLag": 200
+    },
+    {
+      "id": "polygon-zkevm-cardona",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-polygon-zkevm-cardona.graphql.subquery.network",
+      "maxLag": 200
+    },
+    {
+      "id": "base-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-base-mainnet.graphql.subquery.network",
+      "maxLag": 500
+    },
+    {
+      "id": "base-sepolia",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-base-sepolia.graphql.subquery.network",
+      "maxLag": 500
+    },
+    {
+      "id": "bsc-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-bsc-mainnet.graphql.subquery.network",
+      "maxLag": 200
+    },
+    {
+      "id": "bsc-testnet",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-bsc-testnet.graphql.subquery.network",
+      "maxLag": 200
+    },
+    {
+      "id": "optimism-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-optimism-mainnet.graphql.subquery.network",
+      "maxLag": 500
+    },
+    {
+      "id": "optimism-sepolia",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-optimism-sepolia.graphql.subquery.network",
+      "maxLag": 500
+    },
+    {
+      "id": "avalanche-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-avalanche-mainnet.graphql.subquery.network",
+      "maxLag": 300
+    },
+    {
+      "id": "avalanche-fuji",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-avalanche-fuji.graphql.subquery.network",
+      "maxLag": 300
+    },
+    {
+      "id": "zksync-era-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-zksync-era-mainnet.graphql.subquery.network",
+      "maxLag": 500
+    },
+    {
+      "id": "zksync-era-sepolia",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-zksync-era-sepolia.graphql.subquery.network",
+      "maxLag": 500
+    },
+    {
+      "id": "scroll-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-scroll-mainnet.graphql.subquery.network",
+      "maxLag": 200
+    },
+    {
+      "id": "scroll-sepolia",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-scroll-sepolia.graphql.subquery.network",
+      "maxLag": 200
+    },
+    {
+      "id": "linea-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-linea-mainnet.graphql.subquery.network",
+      "maxLag": 200
+    },
+    {
+      "id": "linea-sepolia",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-linea-sepolia.graphql.subquery.network",
+      "maxLag": 200
+    },
+    {
+      "id": "monad-testnet",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-monad-testnet.graphql.subquery.network",
+      "maxLag": 5000
+    },
+    {
+      "id": "moonbeam-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-moonbeam-mainnet.graphql.subquery.network",
+      "maxLag": 100
+    },
+    {
+      "id": "moonriver-mainnet",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-moonriver-mainnet.graphql.subquery.network",
+      "maxLag": 100
+    },
+    {
+      "id": "moonbase-alpha-testnet",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-moonbase-alpha-testnet.graphql.subquery.network",
+      "maxLag": 100
+    },
+    {
+      "id": "polkadot-hub",
+      "ecosystem": "evm",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-polkadot-hub-mainnet.graphql.subquery.network",
+      "maxLag": 100
+    },
+    {
+      "id": "polkadot-hub-testnet",
+      "ecosystem": "evm",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-polkadot-hub-testnet.graphql.subquery.network",
+      "maxLag": 100
+    },
+    {
+      "id": "stellar-mainnet",
+      "ecosystem": "stellar",
+      "type": "mainnet",
+      "endpoint": "https://openzeppelin-stellar-mainnet.graphql.subquery.network",
+      "maxLag": 100
+    },
+    {
+      "id": "stellar-testnet",
+      "ecosystem": "stellar",
+      "type": "testnet",
+      "endpoint": "https://openzeppelin-stellar-testnet.graphql.subquery.network",
+      "maxLag": 100
+    }
+  ]
+}
