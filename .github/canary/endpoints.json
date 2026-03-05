@@ -203,8 +203,7 @@
       "id": "stellar-mainnet",
       "ecosystem": "stellar",
       "type": "mainnet",
-      "endpoint": "",
-      "_note": "Domain openzeppelin-stellar-mainnet.graphql.subquery.network still points to project 0x7e — do not enable until SubQuery fixes the routing",
+      "endpoint": "https://openzeppelin-stellar-mainnet.graphql.subquery.network",
       "maxLag": 100
     },
     {
