@@ -26,6 +26,7 @@
     "clean": "pnpm -r clean",
     "generate:network": "tsx scripts/generate-network.ts",
     "sync:schema": "tsx scripts/sync-schema.ts",
+    "canary:report": "tsx scripts/canary-report.ts 48",
     "prepare": "husky"
   },
   "devDependencies": {
