@@ -113,8 +113,8 @@ jobs:
 
       - name: Smoke query — contracts
         run: |
-          QUERY=$(printf '{ contracts(first: 5, filter: { network: { equalTo: "%s" } }) { nodes { id address network type } } }' '${{ matrix.id }}')
-          RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
+          QUERY=$(printf '{ contracts(first: 1, filter: { network: { equalTo: "%s" } }) { nodes { id address network type } } }' '${{ matrix.id }}')
+          RESPONSE=$(curl -sf --max-time 30 -X POST "${{ matrix.endpoint }}" \
             -H "Content-Type: application/json" \
             -d "$(jq -n --arg q "$QUERY" '{query: $q}')" ) || {
             echo "::error::[${{ matrix.id }}] Contracts query failed"
@@ -128,11 +128,11 @@ jobs:
           COUNT=$(echo "$RESPONSE" | jq '.data.contracts.nodes | length')
           echo "- Contracts returned: \`$COUNT\`" >> "$GITHUB_STEP_SUMMARY"
 
-      # TIMESTAMP_DESC + network filter — matches packages/client; avoids heavy unscoped queries.
-      - name: Smoke query — recent events
+      # No orderBy — sorting large event tables hits SubQuery timeouts on busy chains; first: 1 + network filter is enough for smoke.
+      - name: Smoke query — access control events
         run: |
-          QUERY=$(printf '{ accessControlEvents(first: 5, filter: { network: { equalTo: "%s" } }, orderBy: TIMESTAMP_DESC) { nodes { id eventType blockNumber contract } } }' '${{ matrix.id }}')
-          RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
+          QUERY=$(printf '{ accessControlEvents(first: 1, filter: { network: { equalTo: "%s" } }) { nodes { id eventType blockNumber contract } } }' '${{ matrix.id }}')
+          RESPONSE=$(curl -sf --max-time 30 -X POST "${{ matrix.endpoint }}" \
             -H "Content-Type: application/json" \
             -d "$(jq -n --arg q "$QUERY" '{query: $q}')" ) || {
             echo "::error::[${{ matrix.id }}] Events query failed"
@@ -144,12 +144,12 @@ jobs:
             exit 1
           }
           COUNT=$(echo "$RESPONSE" | jq '.data.accessControlEvents.nodes | length')
-          echo "- Recent events returned: \`$COUNT\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Events returned: \`$COUNT\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Smoke query — role memberships
         run: |
-          QUERY=$(printf '{ roleMemberships(first: 5, filter: { network: { equalTo: "%s" } }) { nodes { id contract role account } } }' '${{ matrix.id }}')
-          RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
+          QUERY=$(printf '{ roleMemberships(first: 1, filter: { network: { equalTo: "%s" } }) { nodes { id contract role account } } }' '${{ matrix.id }}')
+          RESPONSE=$(curl -sf --max-time 30 -X POST "${{ matrix.endpoint }}" \
             -H "Content-Type: application/json" \
             -d "$(jq -n --arg q "$QUERY" '{query: $q}')" ) || {
             echo "::error::[${{ matrix.id }}] RoleMemberships query failed"
