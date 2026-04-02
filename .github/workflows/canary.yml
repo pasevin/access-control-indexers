@@ -113,9 +113,10 @@ jobs:
 
       - name: Smoke query — contracts
         run: |
+          QUERY=$(printf '{ contracts(first: 5, filter: { network: { equalTo: "%s" } }) { nodes { id address network type } } }' '${{ matrix.id }}')
           RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"{ contracts(first: 5) { nodes { id address network type } } }"}') || {
+            -d "$(jq -n --arg q "$QUERY" '{query: $q}')" ) || {
             echo "::error::[${{ matrix.id }}] Contracts query failed"
             exit 1
           }
@@ -127,11 +128,13 @@ jobs:
           COUNT=$(echo "$RESPONSE" | jq '.data.contracts.nodes | length')
           echo "- Contracts returned: \`$COUNT\`" >> "$GITHUB_STEP_SUMMARY"
 
+      # TIMESTAMP_DESC + network filter — matches packages/client; avoids heavy unscoped queries.
       - name: Smoke query — recent events
         run: |
+          QUERY=$(printf '{ accessControlEvents(first: 5, filter: { network: { equalTo: "%s" } }, orderBy: TIMESTAMP_DESC) { nodes { id eventType blockNumber contract } } }' '${{ matrix.id }}')
           RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"{ accessControlEvents(first: 5, orderBy: BLOCK_NUMBER_DESC) { nodes { id eventType blockNumber contract } } }"}') || {
+            -d "$(jq -n --arg q "$QUERY" '{query: $q}')" ) || {
             echo "::error::[${{ matrix.id }}] Events query failed"
             exit 1
           }
@@ -145,9 +148,10 @@ jobs:
 
       - name: Smoke query — role memberships
         run: |
+          QUERY=$(printf '{ roleMemberships(first: 5, filter: { network: { equalTo: "%s" } }) { nodes { id contract role account } } }' '${{ matrix.id }}')
           RESPONSE=$(curl -sf --max-time 15 -X POST "${{ matrix.endpoint }}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"{ roleMemberships(first: 5) { nodes { id contract role account } } }"}') || {
+            -d "$(jq -n --arg q "$QUERY" '{query: $q}')" ) || {
             echo "::error::[${{ matrix.id }}] RoleMemberships query failed"
             exit 1
           }
